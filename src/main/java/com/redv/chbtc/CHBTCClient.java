@@ -165,7 +165,7 @@ public class CHBTCClient implements AutoCloseable{
 				}
 			}
 
-		});
+		},params);
 	}
 
 	private <T> T post(URL url, ValueReader<T> valueReader,
