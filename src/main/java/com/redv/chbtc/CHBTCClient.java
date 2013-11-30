@@ -6,6 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -63,17 +66,24 @@ public class CHBTCClient implements AutoCloseable{
 		}
 	}
 
-	private HttpClient httpClient;
+	private final HttpClient httpClient;
 
-	private String username;
+	private final String username;
 
-	private String password;
+	private final String password;
+
+	private final String safePassword;
 
 	public CHBTCClient(final String username, final String password) {
+		this(username, password, null);
+	}
+
+	public CHBTCClient(final String username, final String password, final String safePassword) {
 		httpClient = new HttpClient();
 
 		this.username = username;
 		this.password = password;
+		this.safePassword = safePassword;
 	}
 
 	public Ticker getTicker() throws IOException {
@@ -105,18 +115,29 @@ public class CHBTCClient implements AutoCloseable{
 				new BasicNameValuePair("safe", "1"));
 	}
 
+	public void bid(final BigDecimal unitPrice, BigDecimal btcNumber)
+			throws IOException {
+		entrust(Type.BUY, unitPrice, btcNumber);
+	}
+
+	public void ask(final BigDecimal unitPrice, BigDecimal btcNumber)
+			throws IOException {
+		entrust(Type.SELL, unitPrice, btcNumber);
+	}
+
 	public void entrust(
 			final Type type,
 			final BigDecimal unitPrice,
-			final BigDecimal btcNumber,
-			final String safePassword) throws IOException {
+			final BigDecimal btcNumber) throws IOException {
 		String isBuy = type == Type.BUY ? "1" : "0";
-		postRoot(
-				ENTRUST_URI,
-				new BasicNameValuePair("unitPrice", unitPrice.toString()),
-				new BasicNameValuePair("btcNumber", btcNumber.toString()),
-				new BasicNameValuePair("safePassword", safePassword),
-				new BasicNameValuePair("isBuy", isBuy));
+		List<NameValuePair> params = new ArrayList<>(4);
+		params.add(new BasicNameValuePair("unitPrice", unitPrice.toString()));
+		params.add(new BasicNameValuePair("btcNumber", btcNumber.toString()));
+		if (safePassword != null) {
+			params.add(new BasicNameValuePair("safePassword", safePassword));
+		}
+		params.add(new BasicNameValuePair("isBuy", isBuy));
+		postRoot(ENTRUST_URI, params);
 	}
 
 	public Balance getBalance() throws IOException {
@@ -125,7 +146,14 @@ public class CHBTCClient implements AutoCloseable{
 	}
 
 	private void postRoot(URI uri, NameValuePair... params) throws IOException {
-		final Root root = httpClient.post(uri, params);
+		postRoot(uri, Arrays.asList(params));
+	}
+
+	private void postRoot(URI uri, Collection<NameValuePair> params) throws IOException {
+		NameValuePair[] array = new NameValuePair[params.size()];
+		params.toArray(array);
+
+		final Root root = httpClient.post(uri, array);
 		if (!root.isSuccess()) {
 			throw new IOException(root.getDes());
 		}
