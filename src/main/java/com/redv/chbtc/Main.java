@@ -15,17 +15,16 @@ public class Main {
 			System.out.println(ticker);
 
 			Depth depth = client.getDepth();
-			System.out.println(depth.getAsks());
-			System.out.println(depth.getBids());
+			System.out.println("Depth.asks: " + depth.getAsks());
+			System.out.println("Depth.bids: " + depth.getBids());
 
 			List<Trade> trades = client.getTrades();
-			System.out.println(trades);
+			System.out.println("Trades: " + trades);
 
 			trades = client.getTrades(200);
-			System.out.println(trades);
+			System.out.println("Trades since 200: " + trades);
 
-			Object o = client.login();
-			System.out.println(o);
+			client.login();
 		}
 	}
 

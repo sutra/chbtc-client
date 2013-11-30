@@ -17,6 +17,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -36,6 +37,11 @@ import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 
 public class CHBTCClient implements AutoCloseable{
+
+	/**
+	 * Status code (200) indicating the request succeeded normally.
+	 */
+	private static final int SC_OK = 200;
 
 	private static final URL BASE_URL = newURL("https://www.chbtc.com/");
 
@@ -102,14 +108,16 @@ public class CHBTCClient implements AutoCloseable{
 		});
 	}
 
-	public Root login() throws IOException {
-		Root root = post(
+	public void login() throws IOException {
+		final Root root = post(
 				new URL(BASE_URL, "user/doLogin"),
 				new BasicNameValuePair("nike", username),
 				new BasicNameValuePair("pwd", password),
 				new BasicNameValuePair("remember", "12"),
 				new BasicNameValuePair("safe", "1"));
-		return root;
+		if (!root.isSuccess()) {
+			throw new IOException(root.getDes());
+		}
 	}
 
 	/**
@@ -179,8 +187,13 @@ public class CHBTCClient implements AutoCloseable{
 		post.setEntity(new UrlEncodedFormEntity(params));
 
 		try (CloseableHttpResponse response = httpClient.execute(post)) {
-			try (InputStream content = response.getEntity().getContent()) {
-				return valueReader.read(content);
+			final StatusLine statusLine = response.getStatusLine();
+			if (statusLine.getStatusCode() == SC_OK) {
+				try (InputStream content = response.getEntity().getContent()) {
+					return valueReader.read(content);
+				}
+			} else {
+				throw new IOException(statusLine.getReasonPhrase());
 			}
 		}
 	}

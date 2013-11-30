@@ -25,7 +25,7 @@ public class Root extends AbstractObject {
 	/**
 	 * @return the state
 	 */
-	public boolean isState() {
+	public boolean isSuccess() {
 		return body.state;
 	}
 

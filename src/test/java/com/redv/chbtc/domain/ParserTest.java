@@ -51,7 +51,7 @@ public class ParserTest {
 		Unmarshaller um = jaxbContext.createUnmarshaller();
 		Root root = (Root) um.unmarshal(getClass().getResource("login.xml"));
 		assertEquals("https://www.chbtc.com", root.getTitle());
-		assertTrue(root.isState());
+		assertTrue(root.isSuccess());
 		assertEquals("https://www.chbtc.com", root.getDes());
 		assertEquals("https://www.chbtc.com", root.getMainData());
 	}
