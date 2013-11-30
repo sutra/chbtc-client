@@ -3,6 +3,7 @@ package com.redv.chbtc;
 import java.io.IOException;
 import java.util.List;
 
+import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.Trade;
@@ -25,6 +26,9 @@ public class Main {
 			System.out.println("Trades since 200: " + trades);
 
 			client.login();
+
+			Balance balance = client.getBalance();
+			System.out.println("Blance: " + balance);
 		}
 	}
 
