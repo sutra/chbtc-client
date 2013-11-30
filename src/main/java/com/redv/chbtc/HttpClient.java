@@ -121,7 +121,7 @@ public class HttpClient implements AutoCloseable {
 		httpClient.close();
 	}
 
-	public static interface ValueReader<T> {
+	public interface ValueReader<T> {
 
 		T read(InputStream content) throws IOException;
 
@@ -181,7 +181,8 @@ public class HttpClient implements AutoCloseable {
 		@Override
 		public T read(InputStream inputStream) throws IOException {
 			final String content = IOUtils.toString(inputStream);
-			final String json = content.substring((method + "(").length(), content.length() - 1);
+			final String methodPrefix = method + "(";
+			final String json = content.substring(methodPrefix.length(), content.length() - 1);
 			log.debug("json: {}", json);
 			try {
 				return valueReader.read(IOUtils.toInputStream(json, "UTF-8"));
@@ -196,7 +197,7 @@ public class HttpClient implements AutoCloseable {
 
 	}
 
-	private class RootValueReader implements ValueReader<Root> {
+	private static class RootValueReader implements ValueReader<Root> {
 
 		/**
 		 * {@inheritDoc}

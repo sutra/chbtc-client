@@ -17,6 +17,18 @@ public class Trade extends AbstractObject {
 
 	private Type type;
 
+	public Trade() {
+	}
+
+	public Trade(Date date, BigDecimal price, BigDecimal amount, String tid,
+			Type type) {
+		this.date = date;
+		this.price = price;
+		this.amount = amount;
+		this.tid = tid;
+		this.type = type;
+	}
+
 	public Date getDate() {
 		return date;
 	}

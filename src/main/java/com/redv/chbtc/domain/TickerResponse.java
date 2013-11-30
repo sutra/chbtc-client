@@ -6,6 +6,14 @@ public class TickerResponse extends AbstractObject {
 
 	private Ticker ticker;
 
+	public TickerResponse() {
+
+	}
+
+	public TickerResponse(Ticker ticker) {
+		this.ticker = ticker;
+	}
+
 	public Ticker getTicker() {
 		return ticker;
 	}

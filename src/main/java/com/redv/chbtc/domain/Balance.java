@@ -24,6 +24,23 @@ public class Balance extends AbstractObject {
 
 	private String currency;
 
+	public Balance() {
+	}
+
+	public Balance(BigDecimal rmb, BigDecimal btc, BigDecimal rmbFreez,
+			BigDecimal btq, BigDecimal btqFreez, BigDecimal btcFreez,
+			BigDecimal total, String currencyN, String currency) {
+		this.rmb = rmb;
+		this.btc = btc;
+		this.rmbFreez = rmbFreez;
+		this.btq = btq;
+		this.btqFreez = btqFreez;
+		this.btcFreez = btcFreez;
+		this.total = total;
+		this.currencyN = currencyN;
+		this.currency = currency;
+	}
+
 	/**
 	 * @return the rmb
 	 */

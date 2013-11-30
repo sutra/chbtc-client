@@ -18,6 +18,19 @@ public class Ticker extends AbstractObject {
 
 	private BigDecimal vol;
 
+	public Ticker() {
+	}
+
+	public Ticker(BigDecimal high, BigDecimal low, BigDecimal buy,
+			BigDecimal sell, BigDecimal last, BigDecimal vol) {
+		this.high = high;
+		this.low = low;
+		this.buy = buy;
+		this.sell = sell;
+		this.last = last;
+		this.vol = vol;
+	}
+
 	/**
 	 * @return the high
 	 */

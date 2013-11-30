@@ -14,7 +14,6 @@ public class Root extends AbstractObject {
 	@XmlElement(name = "BODY")
 	private Body body;
 
-
 	/**
 	 * @return the title
 	 */

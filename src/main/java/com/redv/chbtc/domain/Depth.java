@@ -34,7 +34,7 @@ public class Depth extends AbstractObject {
 		}
 	}
 
-	public class Data extends AbstractObject {
+	public static class Data extends AbstractObject {
 
 		private static final long serialVersionUID = 2013112501L;
 
