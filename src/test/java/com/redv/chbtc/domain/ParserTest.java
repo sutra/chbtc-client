@@ -33,7 +33,7 @@ public class ParserTest {
 	@Test
 	public void testParseDepth() throws JsonParseException, JsonMappingException, IOException {
 		Depth depth = mapper.readValue(getClass().getResource("depth.json"), Depth.class);
-		assertEquals(new BigDecimal("5356.00"), depth.getAsks().get(0).getRate());
+		assertEquals(new BigDecimal("5250.00"), depth.getAsks().get(0).getRate());
 	}
 
 	@Test
