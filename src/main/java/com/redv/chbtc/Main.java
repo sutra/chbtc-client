@@ -25,9 +25,14 @@ public class Main {
 			trades = client.getTrades(200);
 			System.out.println("Trades since 200: " + trades);
 
-			client.login();
+			Balance balance;
 
-			Balance balance = client.getBalance();
+			try {
+				balance = client.getBalance();
+			} catch (LoginRequiredException e) {
+				client.login();
+				balance = client.getBalance();
+			}
 			System.out.println("Blance: " + balance);
 		}
 	}

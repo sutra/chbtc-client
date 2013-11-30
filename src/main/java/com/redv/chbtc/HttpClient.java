@@ -28,6 +28,7 @@ import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,9 +98,7 @@ public class HttpClient implements AutoCloseable {
 		return execute(uri, valueReader, post);
 	}
 
-	private <T> T execute(
-			final URI uri,
-			final ValueReader<T> valueReader,
+	private <T> T execute(final URI uri, final ValueReader<T> valueReader,
 			final HttpUriRequest request) throws IOException {
 		log.debug("Executing: {}", uri);
 		try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -184,7 +183,15 @@ public class HttpClient implements AutoCloseable {
 			final String content = IOUtils.toString(inputStream);
 			final String json = content.substring((method + "(").length(), content.length() - 1);
 			log.debug("json: {}", json);
-			return valueReader.read(IOUtils.toInputStream(json, "UTF-8"));
+			try {
+				return valueReader.read(IOUtils.toInputStream(json, "UTF-8"));
+			} catch (JsonParseException e) {
+				if (json.contains("用户登录")) {
+					throw new LoginRequiredException();
+				} else {
+					throw e;
+				}
+			}
 		}
 
 	}
