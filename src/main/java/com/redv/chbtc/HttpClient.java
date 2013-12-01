@@ -190,7 +190,9 @@ public class HttpClient implements AutoCloseable {
 				if (json.contains("用户登录")) {
 					throw new LoginRequiredException();
 				} else {
-					throw e;
+					String message = String.format("%1$s: %2$s",
+							e.getLocalizedMessage(), json);
+					throw new CHBTCClientException(message, e);
 				}
 			}
 		}
