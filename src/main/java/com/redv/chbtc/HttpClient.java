@@ -41,6 +41,8 @@ public class HttpClient implements AutoCloseable {
 	 */
 	private static final int SC_OK = 200;
 
+	private static final String CHBTC_ENCODING = "UTF-8";
+
 	private final Logger log = LoggerFactory.getLogger(HttpClient.class);
 
 	private final CloseableHttpClient httpClient;
@@ -180,18 +182,18 @@ public class HttpClient implements AutoCloseable {
 
 		@Override
 		public T read(InputStream inputStream) throws IOException {
-			final String content = IOUtils.toString(inputStream);
+			final String content = IOUtils.toString(inputStream, CHBTC_ENCODING);
 			final String methodPrefix = method + "(";
 			final String json = content.substring(methodPrefix.length(), content.length() - 1);
 			log.debug("json: {}", json);
 			try {
-				return valueReader.read(IOUtils.toInputStream(json, "UTF-8"));
+				return valueReader.read(IOUtils.toInputStream(json, CHBTC_ENCODING));
 			} catch (JsonParseException e) {
 				if (json.contains("用户登录")) {
 					throw new LoginRequiredException();
 				} else {
 					String message = String.format("%1$s: %2$s",
-							e.getLocalizedMessage(), json);
+							e.getLocalizedMessage(), content);
 					throw new CHBTCClientException(message, e);
 				}
 			}
