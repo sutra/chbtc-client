@@ -94,6 +94,8 @@ public class EntrustDetailsParser {
 					Status status;
 					if (statusString.equals("成功")) {
 						status = Status.SUCCESS;
+					} else if (statusString.equals("待成交")) {
+						status = Status.UNFILLED;
 					} else {
 						throw new IllegalArgumentException("Unknown status: " + statusString);
 					}
