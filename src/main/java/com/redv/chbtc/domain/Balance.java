@@ -8,15 +8,19 @@ public class Balance extends AbstractObject {
 
 	private BigDecimal rmb;
 
+	private BigDecimal rmbFreez;
+
 	private BigDecimal btc;
 
-	private BigDecimal rmbFreez;
+	private BigDecimal btcFreez;
+
+	private BigDecimal ltc;
+
+	private BigDecimal ltcFreez;
 
 	private BigDecimal btq;
 
 	private BigDecimal btqFreez;
-
-	private BigDecimal btcFreez;
 
 	private BigDecimal total;
 
@@ -27,15 +31,19 @@ public class Balance extends AbstractObject {
 	public Balance() {
 	}
 
-	public Balance(BigDecimal rmb, BigDecimal btc, BigDecimal rmbFreez,
-			BigDecimal btq, BigDecimal btqFreez, BigDecimal btcFreez,
+	public Balance(BigDecimal rmb, BigDecimal rmbFreez,
+			BigDecimal btc, BigDecimal btcFreez,
+			BigDecimal ltc, BigDecimal ltcFreez,
+			BigDecimal btq, BigDecimal btqFreez,
 			BigDecimal total, String currencyN, String currency) {
 		this.rmb = rmb;
-		this.btc = btc;
 		this.rmbFreez = rmbFreez;
+		this.btc = btc;
+		this.btcFreez = btcFreez;
+		this.ltc = ltc;
+		this.ltcFreez = ltcFreez;
 		this.btq = btq;
 		this.btqFreez = btqFreez;
-		this.btcFreez = btcFreez;
 		this.total = total;
 		this.currencyN = currencyN;
 		this.currency = currency;
@@ -49,6 +57,13 @@ public class Balance extends AbstractObject {
 	}
 
 	/**
+	 * @return the rmbFreez
+	 */
+	public BigDecimal getRmbFreez() {
+		return rmbFreez;
+	}
+
+	/**
 	 * @return the btc
 	 */
 	public BigDecimal getBtc() {
@@ -56,10 +71,24 @@ public class Balance extends AbstractObject {
 	}
 
 	/**
-	 * @return the rmbFreez
+	 * @return the btcFreez
 	 */
-	public BigDecimal getRmbFreez() {
-		return rmbFreez;
+	public BigDecimal getBtcFreez() {
+		return btcFreez;
+	}
+
+	/**
+	 * @return the ltc
+	 */
+	public BigDecimal getLtc() {
+		return ltc;
+	}
+
+	/**
+	 * @return the ltcFreez
+	 */
+	public BigDecimal getLtcFreez() {
+		return ltcFreez;
 	}
 
 	/**
@@ -74,13 +103,6 @@ public class Balance extends AbstractObject {
 	 */
 	public BigDecimal getBtqFreez() {
 		return btqFreez;
-	}
-
-	/**
-	 * @return the btcFreez
-	 */
-	public BigDecimal getBtcFreez() {
-		return btcFreez;
 	}
 
 	/**

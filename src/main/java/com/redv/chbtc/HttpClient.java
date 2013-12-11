@@ -53,7 +53,7 @@ public class HttpClient implements AutoCloseable {
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		httpClientBuilder.setRedirectStrategy(new LaxRedirectStrategy());
 
-		String userAgent = "Mozilla/4.0 (compatible; CHBTC Java client)";
+		String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.71 (KHTML, like Gecko) Version/6.1 Safari/537.71";
 		httpClientBuilder.setUserAgent(userAgent);
 
 		Collection<Header> defaultHeaders = new ArrayList<>();
