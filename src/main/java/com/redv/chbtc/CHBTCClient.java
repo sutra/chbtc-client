@@ -17,11 +17,13 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
+import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Root;
 import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 import com.redv.chbtc.domain.Type;
+import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
 public class CHBTCClient implements AutoCloseable{
 
@@ -145,6 +147,50 @@ public class CHBTCClient implements AutoCloseable{
 		}, "jsonp1385317020431").get(0);
 	}
 
+	/**
+	 * Returns the first page of all entrusts.
+	 * @return the first page of all entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getAll() throws IOException {
+		return getAll(1);
+	}
+
+	/**
+	 * Returns all entrusts.
+	 * @param page 1 based.
+	 * @return all entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getAll(int page) throws IOException {
+		String spec = String.format("u/transaction/EntrustDeatils/ajaxList-all-%1$d-----?_=%2$d",
+				page, System.currentTimeMillis());
+		URI allURI = toURI(newURL(BASE_URL, spec));
+		return httpClient.get(allURI, new EntrustDetailsReader());
+	}
+
+	/**
+	 * Returns the first page of buying/selling entrusts.
+	 * @return the first page of buying/selling entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getBuying() throws IOException {
+		return getBuying(1);
+	}
+
+	/**
+	 * Returns buying/selling entrusts.
+	 * @param page 1 based
+	 * @return buying/selling entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getBuying(int page) throws IOException {
+		String spec = String.format("u/transaction/EntrustDeatils/ajaxList-buying-%1$d-----?_=%2$d",
+				page, System.currentTimeMillis());
+		URI buyingURI = toURI(newURL(BASE_URL, spec));
+		return httpClient.get(buyingURI, new EntrustDetailsReader());
+	}
+
 	private void postRoot(URI uri, NameValuePair... params) throws IOException {
 		postRoot(uri, Arrays.asList(params));
 	}
@@ -166,6 +212,5 @@ public class CHBTCClient implements AutoCloseable{
 	public void close() throws IOException {
 		httpClient.close();
 	}
-
 
 }

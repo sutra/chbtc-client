@@ -1,4 +1,6 @@
-package com.redv.chbtc.parser;
+package com.redv.chbtc.valuereader;
+
+import static com.redv.chbtc.HttpClient.CHBTC_ENCODING;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,13 +30,23 @@ import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Status;
 import com.redv.chbtc.domain.Type;
 
-public class EntrustDetailsParser {
+public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 
-	private static final String ENCODING = "UTF-8";
+	private final Logger log = LoggerFactory.getLogger(EntrustDetailsReader.class);
 
-	private final Logger log = LoggerFactory.getLogger(EntrustDetailsParser.class);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<EntrustDetail> read(InputStream content) throws IOException {
+		try {
+			return parse(content);
+		} catch (SAXException | ParseException e) {
+			throw new IOException(e);
+		}
+	}
 
-	public List<EntrustDetail> parse(InputStream inputStream) throws IOException,
+	private List<EntrustDetail> parse(InputStream inputStream) throws IOException,
 			SAXException, ParseException {
 		List<EntrustDetail> entrustDetails = new ArrayList<>();
 
@@ -123,13 +135,13 @@ public class EntrustDetailsParser {
 			throws IOException, SAXException {
 		final InputSource inputSource;
 		if (log.isDebugEnabled()) {
-			String html = IOUtils.toString(inputStream, ENCODING);
+			String html = IOUtils.toString(inputStream, CHBTC_ENCODING);
 			log.debug("Parsing HTML:\n{}", html);
 			inputSource = new InputSource(new InputStreamReader(
-					IOUtils.toInputStream(html, ENCODING), ENCODING));
+					IOUtils.toInputStream(html, CHBTC_ENCODING), CHBTC_ENCODING));
 		} else {
 			inputSource = new InputSource(new InputStreamReader(inputStream,
-					ENCODING));
+					CHBTC_ENCODING));
 		}
 		DOMParser parser = new DOMParser();
 		parser.parse(inputSource);

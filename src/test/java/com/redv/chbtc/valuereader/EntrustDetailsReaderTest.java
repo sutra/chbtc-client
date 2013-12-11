@@ -1,29 +1,27 @@
-package com.redv.chbtc.parser;
+package com.redv.chbtc.valuereader;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Status;
 import com.redv.chbtc.domain.Type;
 
-public class EntrustDetailsParserTest {
+public class EntrustDetailsReaderTest {
 
-	private EntrustDetailsParser parser = new EntrustDetailsParser();
+	private EntrustDetailsReader parser = new EntrustDetailsReader();
 
 	@Test
-	public void testParseAll() throws IOException, SAXException, ParseException {
+	public void testParseAll() throws IOException {
 		try (InputStream inputStream = getClass().getResourceAsStream("EntrustDetails-all.html")) {
-			List<EntrustDetail> details = parser.parse(inputStream);
+			List<EntrustDetail> details = parser.read(inputStream);
 			assertEquals(10, details.size());
 
 			EntrustDetail detail = details.get(0);
@@ -40,9 +38,9 @@ public class EntrustDetailsParserTest {
 	}
 
 	@Test
-	public void testParseBuying() throws IOException, SAXException, ParseException {
+	public void testParseBuying() throws IOException {
 		try (InputStream inputStream = getClass().getResourceAsStream("EntrustDetails-buying.html")) {
-			List<EntrustDetail> details = parser.parse(inputStream);
+			List<EntrustDetail> details = parser.read(inputStream);
 			assertEquals(3, details.size());
 
 			EntrustDetail detail = details.get(0);
