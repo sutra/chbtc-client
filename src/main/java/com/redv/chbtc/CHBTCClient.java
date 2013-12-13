@@ -27,7 +27,6 @@ import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
 public class CHBTCClient implements AutoCloseable{
 
-
 	private static final URL BASE_URL = newURL("https://www.chbtc.com/");
 
 	private static final URL API_BASE_URL = newURL(BASE_URL, "data/");
@@ -39,6 +38,8 @@ public class CHBTCClient implements AutoCloseable{
 	private static final URI TRADES_URI = toURI(newURL(API_BASE_URL, "trades"));
 
 	private static final URI LOGIN_URI = toURI(newURL(BASE_URL, "user/doLogin"));
+
+	private static final String LOGOUT_URL = newURL(BASE_URL, "user/logout").toExternalForm();
 
 	private static final URI ENTRUST_URI = toURI(newURL(BASE_URL, "u/transaction/entrust/doEntrust"));
 
@@ -115,6 +116,10 @@ public class CHBTCClient implements AutoCloseable{
 				new BasicNameValuePair("pwd", password),
 				new BasicNameValuePair("remember", "12"),
 				new BasicNameValuePair("safe", "1"));
+	}
+
+	public void logout() throws IOException {
+		postRoot(toURI(newURL(LOGOUT_URL + "?id=" + System.currentTimeMillis())));
 	}
 
 	public void bid(final BigDecimal unitPrice, BigDecimal btcNumber)
@@ -210,6 +215,7 @@ public class CHBTCClient implements AutoCloseable{
 	 */
 	@Override
 	public void close() throws IOException {
+		logout();
 		httpClient.close();
 	}
 
