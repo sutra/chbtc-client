@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redv.chbtc.domain.Balance;
@@ -68,6 +70,8 @@ public class CHBTCClient implements AutoCloseable{
 			throw new IllegalArgumentException(e);
 		}
 	}
+
+	private final Logger log = LoggerFactory.getLogger(CHBTCClient.class);
 
 	private final HttpClient httpClient;
 
@@ -172,6 +176,26 @@ public class CHBTCClient implements AutoCloseable{
 				page, System.currentTimeMillis());
 		URI allURI = toURI(newURL(BASE_URL, spec));
 		return httpClient.get(allURI, new EntrustDetailsReader());
+	}
+
+	/**
+	 * Returns all buying/selling entrusts.
+	 * @return all buying/selling entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getAllBuying() throws IOException {
+		List<EntrustDetail> allBuying = new ArrayList<>();
+
+		List<EntrustDetail> buying;
+		int page = 1;
+		do {
+			buying = getBuying(page);
+			allBuying.addAll(buying);
+			log.debug("Page: {}, record count: {}", page, buying.size());
+			page++;
+		} while (buying.size() == 10);
+
+		return allBuying;
 	}
 
 	/**
