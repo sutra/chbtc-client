@@ -80,6 +80,18 @@ public class Main {
 					System.out.println(entrustDetail);
 				}
 			}
+
+			List<EntrustDetail> allBuying = client.getAllBuying();
+			for (EntrustDetail entrustDetail : allBuying) {
+				System.out.println(entrustDetail);
+			}
+
+			// Cancel
+			try {
+				client.cancel("201312131142385");
+			} catch (NoCancelableEntrustException e) {
+				System.out.println(e.getLocalizedMessage());
+			}
 		}
 	}
 

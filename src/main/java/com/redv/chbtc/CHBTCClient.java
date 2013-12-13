@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redv.chbtc.domain.Balance;
@@ -43,6 +45,8 @@ public class CHBTCClient implements AutoCloseable{
 
 	private static final URI ENTRUST_URI = toURI(newURL(BASE_URL, "u/transaction/entrust/doEntrust"));
 
+	private static final String CANCEL_URL = newURL(BASE_URL, "u/transaction/EntrustDeatils/doCancle").toExternalForm();
+
 	private static final URI GET_BALANCE_URI = toURI(newURL(BASE_URL, "u/getBalance?jsoncallback=jsonp1385317020431"));
 
 	private static URL newURL(String url) {
@@ -68,6 +72,8 @@ public class CHBTCClient implements AutoCloseable{
 			throw new IllegalArgumentException(e);
 		}
 	}
+
+	private final Logger log = LoggerFactory.getLogger(CHBTCClient.class);
 
 	private final HttpClient httpClient;
 
@@ -147,6 +153,25 @@ public class CHBTCClient implements AutoCloseable{
 		postRoot(ENTRUST_URI, params);
 	}
 
+	/**
+	 * Cancel the open order.
+	 * @param id the order ID.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public void cancel(String id) throws IOException {
+		String url = String.format("%1$s?id=%2$s&_=%3$d", CANCEL_URL, id, System.currentTimeMillis());
+		URI uri = toURI(newURL(url));
+		Root root = doPostRoot(uri);
+
+		if (!root.isSuccess()) {
+			if (root.getDes().equals("当前没有可以取消的委托。")) {
+				throw new NoCancelableEntrustException(root.getDes());
+			} else {
+				throw new CHBTCClientException(root.getDes());
+			}
+		}
+	}
+
 	public Balance getBalance() throws IOException {
 		return httpClient.get(GET_BALANCE_URI, new TypeReference<List<Balance>>() {
 		}, "jsonp1385317020431").get(0);
@@ -175,6 +200,26 @@ public class CHBTCClient implements AutoCloseable{
 	}
 
 	/**
+	 * Returns all buying/selling entrusts.
+	 * @return all buying/selling entrusts.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public List<EntrustDetail> getAllBuying() throws IOException {
+		List<EntrustDetail> allBuying = new ArrayList<>();
+
+		List<EntrustDetail> buying;
+		int page = 1;
+		do {
+			buying = getBuying(page);
+			allBuying.addAll(buying);
+			log.debug("Page: {}, record count: {}", page, buying.size());
+			page++;
+		} while (buying.size() == 10);
+
+		return allBuying;
+	}
+
+	/**
 	 * Returns the first page of buying/selling entrusts.
 	 * @return the first page of buying/selling entrusts.
 	 * @throws IOException indicates I/O exception.
@@ -200,14 +245,25 @@ public class CHBTCClient implements AutoCloseable{
 		postRoot(uri, Arrays.asList(params));
 	}
 
-	private void postRoot(URI uri, Collection<NameValuePair> params) throws IOException {
+	private void postRoot(URI uri, Collection<NameValuePair> params)
+			throws IOException {
+		final Root root = doPostRoot(uri, params);
+		if (!root.isSuccess()) {
+			throw new CHBTCClientException(root.getDes());
+		}
+	}
+
+	private Root doPostRoot(URI uri, NameValuePair... params) throws IOException {
+		return doPostRoot(uri, Arrays.asList(params));
+	}
+
+	private Root doPostRoot(URI uri, Collection<NameValuePair> params)
+			throws IOException {
 		NameValuePair[] array = new NameValuePair[params.size()];
 		params.toArray(array);
 
 		final Root root = httpClient.post(uri, array);
-		if (!root.isSuccess()) {
-			throw new IOException(root.getDes());
-		}
+		return root;
 	}
 
 	/**

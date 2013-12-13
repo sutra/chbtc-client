@@ -9,6 +9,10 @@ public class CHBTCClientException extends IOException {
 	public CHBTCClientException() {
 	}
 
+	public CHBTCClientException(String message) {
+		super(message);
+	}
+
 	public CHBTCClientException(String message, Throwable cause) {
 		super(message, cause);
 	}
