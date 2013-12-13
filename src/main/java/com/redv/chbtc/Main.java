@@ -50,11 +50,27 @@ public class Main {
 				System.out.println(entrustDetail);
 			}
 
+			for (int page = 1; page <= 2; page++) {
+				List<EntrustDetail> allPage = client.getAll(page);
+				System.out.println("get all of page " + page + ", record count " + allPage.size());
+				for (EntrustDetail entrustDetail : allPage) {
+					System.out.println(entrustDetail);
+				}
+			}
+
 			// Buying/Selling entrusts
 			client.getBuying();
 			List<EntrustDetail> buying = client.getBuying();
 			for (EntrustDetail entrustDetail : buying) {
 				System.out.println(entrustDetail);
+			}
+
+			for (int page = 1; page <= 2; page++) {
+				List<EntrustDetail> buyingPage = client.getBuying(page);
+				System.out.println("get buying of page " + page + ", record count " + buyingPage.size());
+				for (EntrustDetail entrustDetail : buyingPage) {
+					System.out.println(entrustDetail);
+				}
 			}
 		}
 	}
