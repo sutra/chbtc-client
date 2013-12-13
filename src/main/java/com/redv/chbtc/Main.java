@@ -12,7 +12,15 @@ import com.redv.chbtc.domain.Trade;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		try (CHBTCClient client = new CHBTCClient(args[0], args[1])) {
+		final String username = args[0];
+		final String password = args[1];
+
+		try (CHBTCClient client = new CHBTCClient(username, password)) {
+			// do nothing, just to test the logout calling when does not login
+			// in close method.
+		}
+
+		try (CHBTCClient client = new CHBTCClient(username, password)) {
 			// Ticker.
 			Ticker ticker = client.getTicker();
 			System.out.println("Ticker: " + ticker);
