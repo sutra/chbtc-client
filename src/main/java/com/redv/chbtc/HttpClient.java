@@ -8,11 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -28,20 +23,24 @@ import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redv.chbtc.domain.Root;
+import com.redv.chbtc.valuereader.JsonValueReader;
+import com.redv.chbtc.valuereader.JsonValueTypeRefReader;
+import com.redv.chbtc.valuereader.JsonpValueReader;
+import com.redv.chbtc.valuereader.RootValueReader;
+import com.redv.chbtc.valuereader.ValueReader;
 
 public class HttpClient implements AutoCloseable {
+
+	public static final String CHBTC_ENCODING = "UTF-8";
 
 	/**
 	 * Status code (200) indicating the request succeeded normally.
 	 */
 	private static final int SC_OK = 200;
-
-	private static final String CHBTC_ENCODING = "UTF-8";
 
 	private final Logger log = LoggerFactory.getLogger(HttpClient.class);
 
@@ -67,11 +66,11 @@ public class HttpClient implements AutoCloseable {
 	}
 
 	public <T> T get(URI uri, Class<T> valueType) throws IOException {
-		return get(uri, new JsonValueReader<T>(valueType));
+		return get(uri, new JsonValueReader<T>(objectMapper, valueType));
 	}
 
 	public <T> T get(URI uri, TypeReference<T> valueTypeRef) throws IOException {
-		return get(uri, new JsonValueTypeRefReader<T>(valueTypeRef));
+		return get(uri, new JsonValueTypeRefReader<T>(objectMapper, valueTypeRef));
 	}
 
 	public <T> T get(URI uri, ValueReader<T> valueReader) throws IOException {
@@ -80,7 +79,7 @@ public class HttpClient implements AutoCloseable {
 
 	public <T> T get(URI uri, TypeReference<T> valueTypeRef, String method)
 			throws IOException {
-		return get(uri, new JsonpValueReader<T>(method, valueTypeRef));
+		return get(uri, new JsonpValueReader<T>(objectMapper, method, valueTypeRef));
 	}
 
 	public Root post(URI uri, NameValuePair... params) throws IOException {
@@ -121,103 +120,6 @@ public class HttpClient implements AutoCloseable {
 	@Override
 	public void close() throws IOException {
 		httpClient.close();
-	}
-
-	public interface ValueReader<T> {
-
-		T read(InputStream content) throws IOException;
-
-	}
-
-	private class JsonValueReader<T> implements ValueReader<T> {
-
-		private final Class<T> valueType;
-
-		public JsonValueReader(Class<T> valueType) {
-			this.valueType = valueType;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public T read(InputStream content) throws IOException {
-			return objectMapper.readValue(content, valueType);
-		}
-
-	}
-
-	private class JsonValueTypeRefReader<T> implements ValueReader<T> {
-
-		private final TypeReference<T> valueTypeRef;
-
-		public JsonValueTypeRefReader(TypeReference<T> valueTypeRef) {
-			this.valueTypeRef = valueTypeRef;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public T read(InputStream content) throws IOException {
-			return objectMapper.readValue(content, valueTypeRef);
-		}
-
-	}
-
-	private class JsonpValueReader<T> implements ValueReader<T> {
-
-		private final String method;
-
-		private final ValueReader<T> valueReader;
-
-		public JsonpValueReader(String method, ValueReader<T> valueReader) {
-			this.method = method;
-			this.valueReader = valueReader;
-		}
-
-		public JsonpValueReader(String method, TypeReference<T> valueTypeRef) {
-			this(method, new JsonValueTypeRefReader<T>(valueTypeRef));
-		}
-
-		@Override
-		public T read(InputStream inputStream) throws IOException {
-			final String content = IOUtils.toString(inputStream, CHBTC_ENCODING);
-			final String methodPrefix = method + "(";
-			final String json = content.substring(methodPrefix.length(), content.length() - 1);
-			log.debug("json: {}", json);
-			try {
-				return valueReader.read(IOUtils.toInputStream(json, CHBTC_ENCODING));
-			} catch (JsonParseException e) {
-				if (json.contains("用户登录")) {
-					throw new LoginRequiredException();
-				} else {
-					String message = String.format("%1$s: %2$s",
-							e.getLocalizedMessage(), content);
-					throw new CHBTCClientException(message, e);
-				}
-			}
-		}
-
-	}
-
-	private static class RootValueReader implements ValueReader<Root> {
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Root read(InputStream content) throws IOException {
-			try {
-				JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
-				Unmarshaller um = jaxbContext.createUnmarshaller();
-				Root root = (Root) um.unmarshal(content);
-				return root;
-			} catch (JAXBException e) {
-				throw new IOException(e);
-			}
-		}
-
 	}
 
 }
