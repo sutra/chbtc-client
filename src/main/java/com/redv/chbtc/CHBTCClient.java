@@ -45,6 +45,8 @@ public class CHBTCClient implements AutoCloseable{
 
 	private static final URI ENTRUST_URI = toURI(newURL(BASE_URL, "u/transaction/entrust/doEntrust"));
 
+	private static final String CANCEL_URL = newURL(BASE_URL, "u/transaction/EntrustDeatils/doCancle").toExternalForm();
+
 	private static final URI GET_BALANCE_URI = toURI(newURL(BASE_URL, "u/getBalance?jsoncallback=jsonp1385317020431"));
 
 	private static URL newURL(String url) {
@@ -151,6 +153,25 @@ public class CHBTCClient implements AutoCloseable{
 		postRoot(ENTRUST_URI, params);
 	}
 
+	/**
+	 * Cancel the open order.
+	 * @param id the order ID.
+	 * @throws IOException indicates I/O exception.
+	 */
+	public void cancel(String id) throws IOException {
+		String url = String.format("%1$s?id=%2$s&_=%3$d", CANCEL_URL, id, System.currentTimeMillis());
+		URI uri = toURI(newURL(url));
+		Root root = doPostRoot(uri);
+
+		if (!root.isSuccess()) {
+			if (root.getDes().equals("当前没有可以取消的委托。")) {
+				throw new NoCancelableEntrustException(root.getDes());
+			} else {
+				throw new CHBTCClientException(root.getDes());
+			}
+		}
+	}
+
 	public Balance getBalance() throws IOException {
 		return httpClient.get(GET_BALANCE_URI, new TypeReference<List<Balance>>() {
 		}, "jsonp1385317020431").get(0);
@@ -224,14 +245,25 @@ public class CHBTCClient implements AutoCloseable{
 		postRoot(uri, Arrays.asList(params));
 	}
 
-	private void postRoot(URI uri, Collection<NameValuePair> params) throws IOException {
+	private void postRoot(URI uri, Collection<NameValuePair> params)
+			throws IOException {
+		final Root root = doPostRoot(uri, params);
+		if (!root.isSuccess()) {
+			throw new CHBTCClientException(root.getDes());
+		}
+	}
+
+	private Root doPostRoot(URI uri, NameValuePair... params) throws IOException {
+		return doPostRoot(uri, Arrays.asList(params));
+	}
+
+	private Root doPostRoot(URI uri, Collection<NameValuePair> params)
+			throws IOException {
 		NameValuePair[] array = new NameValuePair[params.size()];
 		params.toArray(array);
 
 		final Root root = httpClient.post(uri, array);
-		if (!root.isSuccess()) {
-			throw new IOException(root.getDes());
-		}
+		return root;
 	}
 
 	/**

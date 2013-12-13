@@ -85,6 +85,13 @@ public class Main {
 			for (EntrustDetail entrustDetail : allBuying) {
 				System.out.println(entrustDetail);
 			}
+
+			// Cancel
+			try {
+				client.cancel("201312131142385");
+			} catch (NoCancelableEntrustException e) {
+				System.out.println(e.getLocalizedMessage());
+			}
 		}
 	}
 
