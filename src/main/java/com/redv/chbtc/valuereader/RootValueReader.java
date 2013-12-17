@@ -7,6 +7,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
+
+import com.redv.chbtc.HttpClient;
 import com.redv.chbtc.domain.Root;
 
 public class RootValueReader implements ValueReader<Root> {
@@ -16,13 +19,17 @@ public class RootValueReader implements ValueReader<Root> {
 	 */
 	@Override
 	public Root read(InputStream content) throws IOException {
+		String string = IOUtils.toString(content, HttpClient.CHBTC_ENCODING);
+
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
 			Unmarshaller um = jaxbContext.createUnmarshaller();
-			Root root = (Root) um.unmarshal(content);
-			return root;
+			try (InputStream inputStream = IOUtils.toInputStream(string)) {
+				Root root = (Root) um.unmarshal(inputStream);
+				return root;
+			}
 		} catch (JAXBException e) {
-			throw new IOException(e);
+			throw new IOException("Unmarshal failed: " + string, e);
 		}
 	}
 
