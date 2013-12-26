@@ -54,7 +54,7 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 
 	private List<EntrustDetail> parse(String content) throws IOException,
 			SAXException, ParseException {
-		Pattern p = Pattern.compile("javascript:details\\(([0-9]+)\\);");
+		Pattern p = Pattern.compile("javascript:(details|cancle)\\(\\\'?(\\d+)\\\'?\\);?");
 
 		List<EntrustDetail> entrustDetails = new ArrayList<>();
 
@@ -97,7 +97,7 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 					Matcher m = p.matcher(hrefForId);
 					final String id;
 					if (m.matches()) {
-						id = m.group(1);
+						id = m.group(2);
 					} else {
 						id = null;
 					}
@@ -129,7 +129,8 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 						status = Status.UNFILLED;
 					} else if (statusString.equals("部分成交")) {
 						status = Status.PARTIALLY_FILLED;
-					} else if (statusString.equals("-")) {
+					} else if (statusString.equals("-")
+							|| statusString.equals("—")) {
 						status = Status.UNKNOWN;
 					} else {
 						throw new IllegalArgumentException(

@@ -41,21 +41,19 @@ public class EntrustDetailsReaderTest {
 	public void testParseBuying() throws IOException {
 		try (InputStream inputStream = getClass().getResourceAsStream("EntrustDetails-buying.html")) {
 			List<EntrustDetail> details = parser.read(inputStream);
-			assertEquals(0, details.size());
+			assertEquals(1, details.size());
 
-			/* TODO: need on buying entrust detail to verify the parser
 			EntrustDetail detail = details.get(0);
-			assertEquals("2013-12-11 18:06:13", DateFormatUtils.format(detail.getDate(), "yyyy-MM-dd HH:mm:ss"));
-			assertEquals("201312111111443", detail.getId());
+			assertEquals("2013-12-27 00:35:40", DateFormatUtils.format(detail.getDate(), "yyyy-MM-dd HH:mm:ss"));
 			assertEquals(Type.SELL, detail.getType());
-			assertEquals(new BigDecimal("5658.10"), detail.getPrice());
+			assertEquals(new BigDecimal("4300.0"), detail.getPrice());
 			assertEquals(new BigDecimal("0.0"), detail.getAvgPrice());
-			assertEquals(new BigDecimal("0.0010"), detail.getAmount());
-			assertEquals(new BigDecimal("0.0000"), detail.getFilledAmount());
-			assertEquals(new BigDecimal("5.6581"), detail.getTotal());
-			assertEquals(new BigDecimal("0.00"), detail.getFilled());
-			assertEquals(Status.UNFILLED, detail.getStatus());
-			*/
+			assertEquals(new BigDecimal("0.02"), detail.getAmount());
+			assertEquals(new BigDecimal("0.0"), detail.getFilledAmount());
+			assertEquals(new BigDecimal("86.0"), detail.getTotal());
+			assertEquals(new BigDecimal("0.0"), detail.getFilled());
+			assertEquals(Status.UNKNOWN, detail.getStatus());
+			assertEquals("201312271511273", detail.getId());
 		}
 	}
 
