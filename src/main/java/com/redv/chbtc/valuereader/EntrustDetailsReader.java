@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +50,8 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 
 	private List<EntrustDetail> parse(InputStream inputStream) throws IOException,
 			SAXException, ParseException {
+		Pattern p = Pattern.compile("javascript:details\\(([0-9]+)\\);");
+
 		List<EntrustDetail> entrustDetails = new ArrayList<>();
 
 		HTMLDocument document = toDocument(inputStream);
@@ -62,28 +66,38 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 				log.debug("Class name: {}", className);
 				if (StringUtils.equals(className, "bd")) {
 					HTMLCollection cells = row.getCells();
-					HTMLTableCellElement dateIdCell = (HTMLTableCellElement) cells.item(0);
+					HTMLTableCellElement dateCell = (HTMLTableCellElement) cells.item(0);
 					HTMLTableCellElement typeCell = (HTMLTableCellElement) cells.item(1);
 					HTMLTableCellElement priceCell = (HTMLTableCellElement) cells.item(2);
 					HTMLTableCellElement amountCell = (HTMLTableCellElement) cells.item(3);
 					HTMLTableCellElement totalCell = (HTMLTableCellElement) cells.item(4);
 					HTMLTableCellElement statusCell = (HTMLTableCellElement) cells.item(5);
+					HTMLTableCellElement operationCell = (HTMLTableCellElement) cells.item(6);
 
-					String dateString = dateIdCell.getFirstChild().getTextContent().trim();
-					String id = dateIdCell.getChildNodes().item(2).getTextContent().trim();
+					String hrefForId = operationCell.getElementsByTagName("a").item(0).getAttributes().getNamedItem("href").getNodeValue();
+					log.debug("hrefForId: {}", hrefForId);
+
+					String dateString = dateCell.getFirstChild().getTextContent().trim();
 					String typeString = typeCell.getTextContent().trim();
 					String priceString = priceCell.getTextContent().trim();
 					String[] prices = priceString.split("/");
 					String price = prices[0].substring(1).trim();
 					String avgPrice = prices[1].trim();
 					String amount = amountCell.getFirstChild().getTextContent().trim().substring(1).trim();
-					String filledAmount = amountCell.getChildNodes().item(3).getTextContent().trim();
+					amount = amount.substring(0, amount.length() - amount.indexOf("/")).trim();
+					String filledAmount = amountCell.getChildNodes().item(1).getTextContent().trim();
 					String total = totalCell.getFirstChild().getTextContent().trim().substring(1).trim();
-					String filled = totalCell.getChildNodes().item(3).getTextContent().trim();
+					total = total.substring(0, total.length() - total.indexOf("/")).trim();
+					String filled = totalCell.getChildNodes().item(1).getTextContent().trim();
 					String statusString = statusCell.getTextContent().trim();
-
+					Matcher m = p.matcher(hrefForId);
+					final String id;
+					if (m.matches()) {
+						id = m.group(1);
+					} else {
+						id = null;
+					}
 					log.debug("dateString: {}", dateString);
-					log.debug("id: {}", id);
 					log.debug("typeString: {}", typeString);
 					log.debug("price: {}", price);
 					log.debug("avgPrice: {}", avgPrice);
@@ -92,6 +106,7 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 					log.debug("total: {}", total);
 					log.debug("filled: {}", filled);
 					log.debug("statusString: {}", statusString);
+					log.debug("id: {}", id);
 
 					Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
 					Type type;

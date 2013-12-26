@@ -25,15 +25,15 @@ public class EntrustDetailsReaderTest {
 			assertEquals(10, details.size());
 
 			EntrustDetail detail = details.get(0);
-			assertEquals("2013-12-07 23:13:32", DateFormatUtils.format(detail.getDate(), "yyyy-MM-dd HH:mm:ss"));
-			assertEquals("201312071044266", detail.getId());
-			assertEquals(Type.BUY, detail.getType());
-			assertEquals(new BigDecimal("4903.00"), detail.getPrice());
-			assertEquals(new BigDecimal("4903.0"), detail.getAvgPrice());
-			assertEquals(new BigDecimal("0.0010"), detail.getAmount());
-			assertEquals(new BigDecimal("0.0010"), detail.getFilledAmount());
-			assertEquals(new BigDecimal("4.903"), detail.getTotal());
-			assertEquals(new BigDecimal("4.903"), detail.getFilled());
+			assertEquals("2013-12-26 20:28:18", DateFormatUtils.format(detail.getDate(), "yyyy-MM-dd HH:mm:ss"));
+			assertEquals(Type.SELL, detail.getType());
+			assertEquals(new BigDecimal("4140.00"), detail.getPrice());
+			assertEquals(new BigDecimal("4140.0"), detail.getAvgPrice());
+			assertEquals(new BigDecimal("0.0070"), detail.getAmount());
+			assertEquals(new BigDecimal("0.0070"), detail.getFilledAmount());
+			assertEquals(new BigDecimal("28.98"), detail.getTotal());
+			assertEquals(new BigDecimal("28.98"), detail.getFilled());
+			assertEquals("201312261505578", detail.getId());
 		}
 	}
 
