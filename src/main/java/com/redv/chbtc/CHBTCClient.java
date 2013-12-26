@@ -29,6 +29,8 @@ import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
 public class CHBTCClient implements AutoCloseable{
 
+	public static final String ENCODING = "UTF-8";
+
 	private static final URI BASE_URI = URI.create("https://www.chbtc.com/");
 
 	private static final URI API_BASE_URI = URIUtils.resolve(BASE_URI, "data/");
