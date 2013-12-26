@@ -31,7 +31,10 @@ public class JsonValueReader<T> implements ValueReader<T> {
 	@Override
 	public T read(InputStream inputStream) throws IOException {
 		final String content = IOUtils.toString(inputStream, ENCODING);
+		return read(content);
+	}
 
+	protected T read(String content) throws IOException {
 		log.debug("Reading {} from \"{}\".", valueType, content);
 
 		try (InputStream in = IOUtils.toInputStream(content, ENCODING)) {

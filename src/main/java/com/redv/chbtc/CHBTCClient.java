@@ -25,6 +25,7 @@ import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 import com.redv.chbtc.domain.Type;
+import com.redv.chbtc.valuereader.DepthReader;
 import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
 public class CHBTCClient implements AutoCloseable{
@@ -78,7 +79,7 @@ public class CHBTCClient implements AutoCloseable{
 	}
 
 	public Depth getDepth() throws IOException {
-		return httpClient.get(DEPTH_URI, Depth.class);
+		return httpClient.get(DEPTH_URI, new DepthReader());
 	}
 
 	public List<Trade> getTrades() throws IOException {
