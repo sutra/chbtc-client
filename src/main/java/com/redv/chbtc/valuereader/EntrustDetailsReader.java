@@ -1,10 +1,11 @@
 package com.redv.chbtc.valuereader;
 
-import static com.redv.chbtc.HttpClient.CHBTC_ENCODING;
+import static com.redv.chbtc.CHBTCClient.ENCODING;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,7 +41,8 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<EntrustDetail> read(InputStream content) throws IOException {
+	public List<EntrustDetail> read(InputStream inputStream) throws IOException {
+		final String content = IOUtils.toString(inputStream, ENCODING);
 		try {
 			return parse(content);
 		} catch (Exception e) {
@@ -50,13 +52,13 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 		}
 	}
 
-	private List<EntrustDetail> parse(InputStream inputStream) throws IOException,
+	private List<EntrustDetail> parse(String content) throws IOException,
 			SAXException, ParseException {
 		Pattern p = Pattern.compile("javascript:details\\(([0-9]+)\\);");
 
 		List<EntrustDetail> entrustDetails = new ArrayList<>();
 
-		HTMLDocument document = toDocument(inputStream);
+		HTMLDocument document = toDocument(content);
 		HTMLTableElement listTable = (HTMLTableElement) document.getElementById("ListTable");
 		HTMLCollection tbodies = listTable.getTBodies();
 		for (int i = 0; i < tbodies.getLength(); i++) {
@@ -153,18 +155,12 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 		return entrustDetails;
 	}
 
-	private HTMLDocument toDocument(InputStream inputStream)
-			throws IOException, SAXException {
+	private HTMLDocument toDocument(String content)
+			throws UnsupportedEncodingException, IOException, SAXException {
 		final InputSource inputSource;
-		if (log.isDebugEnabled()) {
-			String html = IOUtils.toString(inputStream, CHBTC_ENCODING);
-			log.debug("Parsing HTML:\n{}", html);
-			inputSource = new InputSource(new InputStreamReader(
-					IOUtils.toInputStream(html, CHBTC_ENCODING), CHBTC_ENCODING));
-		} else {
-			inputSource = new InputSource(new InputStreamReader(inputStream,
-					CHBTC_ENCODING));
-		}
+		inputSource = new InputSource(new InputStreamReader(
+				IOUtils.toInputStream(content, ENCODING), ENCODING));
+
 		DOMParser parser = new DOMParser();
 		parser.parse(inputSource);
 		HTMLDocument document = (HTMLDocument) parser.getDocument();
