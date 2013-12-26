@@ -1,9 +1,15 @@
 package com.redv.chbtc.domain;
 
+import static java.math.BigDecimal.ONE;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Depth extends AbstractObject {
 
@@ -78,8 +84,45 @@ public class Depth extends AbstractObject {
 		 * {@inheritDoc}
 		 */
 		@Override
+		public boolean equals(Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			Data rhs = (Data) obj;
+			return new EqualsBuilder()
+					.append(getType(), rhs.getType())
+					.append(getRate(), rhs.getRate())
+					.isEquals();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder(17, 37)
+					.append(getType())
+					.append(getRate())
+					.toHashCode();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
 		public int compareTo(Data o) {
-			return getRate().compareTo(o.getRate()) * (getType() == Type.BUY ? -1 : 1);
+			BigDecimal direction = getType() == Type.BUY ? ONE.negate() : ONE;
+			return new CompareToBuilder()
+					.append(getType(), o.getType())
+					.append(getRate().multiply(direction),
+							o.getRate().multiply(direction))
+					.toComparison();
 		}
 
 	}

@@ -108,8 +108,13 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 						status = Status.SUCCESS;
 					} else if (statusString.equals("待成交")) {
 						status = Status.UNFILLED;
+					} else if (statusString.equals("部分成交")) {
+						status = Status.PARTIALLY_FILLED;
+					} else if (statusString.equals("-")) {
+						status = Status.UNKNOWN;
 					} else {
-						throw new IllegalArgumentException("Unknown status: " + statusString);
+						throw new IllegalArgumentException(
+								"Unexpected status: " + statusString);
 					}
 
 					EntrustDetail detail = new EntrustDetail(
