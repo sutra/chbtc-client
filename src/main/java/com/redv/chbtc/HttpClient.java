@@ -35,8 +35,6 @@ import com.redv.chbtc.valuereader.ValueReader;
 
 public class HttpClient implements AutoCloseable {
 
-	public static final String CHBTC_ENCODING = "UTF-8";
-
 	/**
 	 * Status code (200) indicating the request succeeded normally.
 	 */

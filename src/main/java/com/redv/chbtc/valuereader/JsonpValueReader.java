@@ -1,5 +1,7 @@
 package com.redv.chbtc.valuereader;
 
+import static com.redv.chbtc.CHBTCClient.ENCODING;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,7 +13,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redv.chbtc.CHBTCClientException;
-import com.redv.chbtc.HttpClient;
 import com.redv.chbtc.LoginRequiredException;
 
 public class JsonpValueReader<T> implements ValueReader<T> {
@@ -33,12 +34,12 @@ public class JsonpValueReader<T> implements ValueReader<T> {
 
 	@Override
 	public T read(InputStream inputStream) throws IOException {
-		final String content = IOUtils.toString(inputStream, HttpClient.CHBTC_ENCODING);
+		final String content = IOUtils.toString(inputStream, ENCODING);
 		final String methodPrefix = method + "(";
 		final String json = content.substring(methodPrefix.length(), content.length() - 1);
 		log.debug("json: {}", json);
 		try {
-			return valueReader.read(IOUtils.toInputStream(json, HttpClient.CHBTC_ENCODING));
+			return valueReader.read(IOUtils.toInputStream(json, ENCODING));
 		} catch (JsonParseException e) {
 			if (json.contains("用户登录")) {
 				throw new LoginRequiredException();
