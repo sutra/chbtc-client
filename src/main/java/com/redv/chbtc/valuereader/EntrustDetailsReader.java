@@ -43,8 +43,10 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 	public List<EntrustDetail> read(InputStream content) throws IOException {
 		try {
 			return parse(content);
-		} catch (SAXException | ParseException e) {
-			throw new IOException(e);
+		} catch (Exception e) {
+			String msg = String.format("Parse entrust details from \"%1$s\" failed.",
+					content);
+			throw new IOException(msg, e);
 		}
 	}
 
