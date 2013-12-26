@@ -1,16 +1,19 @@
 package com.redv.chbtc.valuereader;
 
-import static com.redv.chbtc.HttpClient.CHBTC_ENCODING;
+import static com.redv.chbtc.CHBTCClient.ENCODING;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,19 +41,24 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<EntrustDetail> read(InputStream content) throws IOException {
+	public List<EntrustDetail> read(InputStream inputStream) throws IOException {
+		final String content = IOUtils.toString(inputStream, ENCODING);
 		try {
 			return parse(content);
-		} catch (SAXException | ParseException e) {
-			throw new IOException(e);
+		} catch (Exception e) {
+			String msg = String.format("Parse entrust details from \"%1$s\" failed.",
+					content);
+			throw new IOException(msg, e);
 		}
 	}
 
-	private List<EntrustDetail> parse(InputStream inputStream) throws IOException,
+	private List<EntrustDetail> parse(String content) throws IOException,
 			SAXException, ParseException {
+		Pattern p = Pattern.compile("javascript:details\\(([0-9]+)\\);");
+
 		List<EntrustDetail> entrustDetails = new ArrayList<>();
 
-		HTMLDocument document = toDocument(inputStream);
+		HTMLDocument document = toDocument(content);
 		HTMLTableElement listTable = (HTMLTableElement) document.getElementById("ListTable");
 		HTMLCollection tbodies = listTable.getTBodies();
 		for (int i = 0; i < tbodies.getLength(); i++) {
@@ -62,28 +70,38 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 				log.debug("Class name: {}", className);
 				if (StringUtils.equals(className, "bd")) {
 					HTMLCollection cells = row.getCells();
-					HTMLTableCellElement dateIdCell = (HTMLTableCellElement) cells.item(0);
+					HTMLTableCellElement dateCell = (HTMLTableCellElement) cells.item(0);
 					HTMLTableCellElement typeCell = (HTMLTableCellElement) cells.item(1);
 					HTMLTableCellElement priceCell = (HTMLTableCellElement) cells.item(2);
 					HTMLTableCellElement amountCell = (HTMLTableCellElement) cells.item(3);
 					HTMLTableCellElement totalCell = (HTMLTableCellElement) cells.item(4);
 					HTMLTableCellElement statusCell = (HTMLTableCellElement) cells.item(5);
+					HTMLTableCellElement operationCell = (HTMLTableCellElement) cells.item(6);
 
-					String dateString = dateIdCell.getFirstChild().getTextContent().trim();
-					String id = dateIdCell.getChildNodes().item(2).getTextContent().trim();
+					String hrefForId = operationCell.getElementsByTagName("a").item(0).getAttributes().getNamedItem("href").getNodeValue();
+					log.debug("hrefForId: {}", hrefForId);
+
+					String dateString = dateCell.getFirstChild().getTextContent().trim();
 					String typeString = typeCell.getTextContent().trim();
 					String priceString = priceCell.getTextContent().trim();
 					String[] prices = priceString.split("/");
 					String price = prices[0].substring(1).trim();
 					String avgPrice = prices[1].trim();
 					String amount = amountCell.getFirstChild().getTextContent().trim().substring(1).trim();
-					String filledAmount = amountCell.getChildNodes().item(3).getTextContent().trim();
+					amount = amount.substring(0, amount.length() - amount.indexOf("/")).trim();
+					String filledAmount = amountCell.getChildNodes().item(1).getTextContent().trim();
 					String total = totalCell.getFirstChild().getTextContent().trim().substring(1).trim();
-					String filled = totalCell.getChildNodes().item(3).getTextContent().trim();
+					total = total.substring(0, total.length() - total.indexOf("/")).trim();
+					String filled = totalCell.getChildNodes().item(1).getTextContent().trim();
 					String statusString = statusCell.getTextContent().trim();
-
+					Matcher m = p.matcher(hrefForId);
+					final String id;
+					if (m.matches()) {
+						id = m.group(1);
+					} else {
+						id = null;
+					}
 					log.debug("dateString: {}", dateString);
-					log.debug("id: {}", id);
 					log.debug("typeString: {}", typeString);
 					log.debug("price: {}", price);
 					log.debug("avgPrice: {}", avgPrice);
@@ -92,6 +110,7 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 					log.debug("total: {}", total);
 					log.debug("filled: {}", filled);
 					log.debug("statusString: {}", statusString);
+					log.debug("id: {}", id);
 
 					Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
 					Type type;
@@ -136,18 +155,12 @@ public class EntrustDetailsReader implements ValueReader<List<EntrustDetail>> {
 		return entrustDetails;
 	}
 
-	private HTMLDocument toDocument(InputStream inputStream)
-			throws IOException, SAXException {
+	private HTMLDocument toDocument(String content)
+			throws UnsupportedEncodingException, IOException, SAXException {
 		final InputSource inputSource;
-		if (log.isDebugEnabled()) {
-			String html = IOUtils.toString(inputStream, CHBTC_ENCODING);
-			log.debug("Parsing HTML:\n{}", html);
-			inputSource = new InputSource(new InputStreamReader(
-					IOUtils.toInputStream(html, CHBTC_ENCODING), CHBTC_ENCODING));
-		} else {
-			inputSource = new InputSource(new InputStreamReader(inputStream,
-					CHBTC_ENCODING));
-		}
+		inputSource = new InputSource(new InputStreamReader(
+				IOUtils.toInputStream(content, ENCODING), ENCODING));
+
 		DOMParser parser = new DOMParser();
 		parser.parse(inputSource);
 		HTMLDocument document = (HTMLDocument) parser.getDocument();
