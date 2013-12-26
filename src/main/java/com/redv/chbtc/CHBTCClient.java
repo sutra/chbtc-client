@@ -2,16 +2,16 @@ package com.redv.chbtc;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,49 +29,25 @@ import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
 public class CHBTCClient implements AutoCloseable{
 
-	private static final URL BASE_URL = newURL("https://www.chbtc.com/");
+	private static final URI BASE_URI = URI.create("https://www.chbtc.com/");
 
-	private static final URL API_BASE_URL = newURL(BASE_URL, "data/");
+	private static final URI API_BASE_URI = URIUtils.resolve(BASE_URI, "data/");
 
-	private static final URI TICKER_URI = toURI(newURL(API_BASE_URL, "ticker"));
+	private static final URI TICKER_URI = URIUtils.resolve(API_BASE_URI, "ticker");
 
-	private static final URI DEPTH_URI = toURI(newURL(API_BASE_URL, "depth"));
+	private static final URI DEPTH_URI = URIUtils.resolve(API_BASE_URI, "depth");
 
-	private static final URI TRADES_URI = toURI(newURL(API_BASE_URL, "trades"));
+	private static final URI TRADES_URI = URIUtils.resolve(API_BASE_URI, "trades");
 
-	private static final URI LOGIN_URI = toURI(newURL(BASE_URL, "user/doLogin"));
+	private static final URI LOGIN_URI = URIUtils.resolve(BASE_URI, "user/doLogin");
 
-	private static final String LOGOUT_URL = newURL(BASE_URL, "user/logout").toExternalForm();
+	private static final URI LOGOUT_URI = URIUtils.resolve(BASE_URI, "user/logout");
 
-	private static final URI ENTRUST_URI = toURI(newURL(BASE_URL, "u/transaction/entrust/doEntrust"));
+	private static final URI ENTRUST_URI = URIUtils.resolve(BASE_URI, "u/transaction/entrust/doEntrust");
 
-	private static final String CANCEL_URL = newURL(BASE_URL, "u/transaction/EntrustDeatils/doCancle").toExternalForm();
+	private static final URI CANCEL_URI = URIUtils.resolve(BASE_URI, "u/transaction/EntrustDeatils/doCancle");
 
-	private static final URI GET_BALANCE_URI = toURI(newURL(BASE_URL, "u/getBalance?jsoncallback=jsonp1385317020431"));
-
-	private static URL newURL(String url) {
-		try {
-			return new URL(url);
-		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	private static URL newURL(URL context, String spec) {
-		try {
-			return new URL(context, spec);
-		} catch (MalformedURLException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	private static URI toURI(URL url) {
-		try {
-			return url.toURI();
-		} catch (URISyntaxException e) {
-			throw new IllegalArgumentException(e);
-		}
-	}
+	private static final URI GET_BALANCE_URI = URIUtils.resolve(BASE_URI, "u/getBalance?jsoncallback=jsonp1385317020431");
 
 	private final Logger log = LoggerFactory.getLogger(CHBTCClient.class);
 
@@ -109,8 +85,13 @@ public class CHBTCClient implements AutoCloseable{
 	}
 
 	public List<Trade> getTrades(int since) throws IOException {
-		URI uri = toURI(newURL(TRADES_URI.toURL().toExternalForm() + "?since="
-				+ since));
+		final URI uri;
+		try {
+			uri = new URIBuilder(TRADES_URI).setParameter("since", String.valueOf(since)).build();
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException(e);
+		}
+
 		return httpClient.get(uri, new TypeReference<List<Trade>>() {
 		});
 	}
@@ -125,7 +106,15 @@ public class CHBTCClient implements AutoCloseable{
 	}
 
 	public void logout() throws IOException {
-		postRoot(toURI(newURL(LOGOUT_URL + "?id=" + System.currentTimeMillis())));
+		final URI uri;
+		try {
+			uri = new URIBuilder(LOGOUT_URI)
+				.setParameter("id", String.valueOf(System.currentTimeMillis()))
+				.build();
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException(e);
+		}
+		postRoot(uri);
 	}
 
 	public void bid(final BigDecimal unitPrice, BigDecimal btcNumber)
@@ -159,8 +148,16 @@ public class CHBTCClient implements AutoCloseable{
 	 * @throws IOException indicates I/O exception.
 	 */
 	public void cancel(String id) throws IOException {
-		String url = String.format("%1$s?id=%2$s&_=%3$d", CANCEL_URL, id, System.currentTimeMillis());
-		URI uri = toURI(newURL(url));
+		final URI uri;
+		try {
+			uri = new URIBuilder(CANCEL_URI)
+					.setParameter("id", id)
+					.setParameter("_",
+							String.valueOf(System.currentTimeMillis())).build();
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException(e);
+		}
+
 		Root root = doPostRoot(uri);
 
 		if (!root.isSuccess()) {
@@ -195,7 +192,7 @@ public class CHBTCClient implements AutoCloseable{
 	public List<EntrustDetail> getAll(int page) throws IOException {
 		String spec = String.format("u/transaction/EntrustDeatils/ajaxList-all-%1$d-----?_=%2$d",
 				page, System.currentTimeMillis());
-		URI allURI = toURI(newURL(BASE_URL, spec));
+		URI allURI = URIUtils.resolve(BASE_URI, spec);
 		return httpClient.get(allURI, new EntrustDetailsReader());
 	}
 
@@ -237,7 +234,7 @@ public class CHBTCClient implements AutoCloseable{
 	public List<EntrustDetail> getBuying(int page) throws IOException {
 		String spec = String.format("u/transaction/EntrustDeatils/ajaxList-buying-%1$d-----?_=%2$d",
 				page, System.currentTimeMillis());
-		URI buyingURI = toURI(newURL(BASE_URL, spec));
+		URI buyingURI = URIUtils.resolve(BASE_URI, spec);
 		return httpClient.get(buyingURI, new EntrustDetailsReader());
 	}
 
