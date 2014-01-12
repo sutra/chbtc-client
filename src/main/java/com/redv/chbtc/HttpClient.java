@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -57,6 +58,14 @@ public class HttpClient implements AutoCloseable {
 		defaultHeaders.add(new BasicHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
 		httpClientBuilder.setDefaultHeaders(defaultHeaders);
 
+		RequestConfig defaultRequestConfig = RequestConfig.custom()
+				.setSocketTimeout(5000)
+				.setConnectTimeout(5000)
+				.setConnectionRequestTimeout(5000)
+				.setStaleConnectionCheckEnabled(true)
+				.build();
+		httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
+
 		httpClient = httpClientBuilder.build();
 
 		objectMapper = new ObjectMapper();
@@ -72,7 +81,7 @@ public class HttpClient implements AutoCloseable {
 	}
 
 	public <T> T get(URI uri, ValueReader<T> valueReader) throws IOException {
-		return execute(uri, valueReader, new HttpGet(uri));
+		return execute(valueReader, new HttpGet(uri));
 	}
 
 	public <T> T get(URI uri, TypeReference<T> valueTypeRef, String method)
@@ -94,12 +103,13 @@ public class HttpClient implements AutoCloseable {
 			List<NameValuePair> params) throws IOException {
 		HttpPost post = new HttpPost(uri);
 		post.setEntity(new UrlEncodedFormEntity(params));
-		return execute(uri, valueReader, post);
+		return execute(valueReader, post);
 	}
 
-	private <T> T execute(final URI uri, final ValueReader<T> valueReader,
+	private <T> T execute(
+			final ValueReader<T> valueReader,
 			final HttpUriRequest request) throws IOException {
-		log.debug("Executing: {}", uri);
+		log.debug("Executing: {}", request.getURI());
 		try (CloseableHttpResponse response = httpClient.execute(request)) {
 			final StatusLine statusLine = response.getStatusLine();
 			if (statusLine.getStatusCode() == SC_OK) {
