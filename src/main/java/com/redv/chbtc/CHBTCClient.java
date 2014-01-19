@@ -28,7 +28,7 @@ import com.redv.chbtc.domain.Type;
 import com.redv.chbtc.valuereader.DepthReader;
 import com.redv.chbtc.valuereader.EntrustDetailsReader;
 
-public class CHBTCClient implements AutoCloseable{
+public class CHBTCClient implements AutoCloseable {
 
 	public static final String ENCODING = "UTF-8";
 
@@ -62,12 +62,27 @@ public class CHBTCClient implements AutoCloseable{
 
 	private final String safePassword;
 
-	public CHBTCClient(final String username, final String password) {
-		this(username, password, null);
+	public CHBTCClient(
+			final String username,
+			final String password,
+			final int socketTimeout,
+			final int connectTimeout,
+			final int connectionRequestTimeout) {
+		this(username, password, null,
+				socketTimeout, connectTimeout, connectionRequestTimeout);
 	}
 
-	public CHBTCClient(final String username, final String password, final String safePassword) {
-		httpClient = new HttpClient();
+	public CHBTCClient(
+			final String username,
+			final String password,
+			final String safePassword,
+			final int socketTimeout,
+			final int connectTimeout,
+			final int connectionRequestTimeout) {
+		httpClient = new HttpClient(
+				socketTimeout,
+				connectTimeout,
+				connectionRequestTimeout);
 
 		this.username = username;
 		this.password = password;
