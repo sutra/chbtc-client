@@ -20,12 +20,12 @@ public class Main {
 		final String username = args[0];
 		final String password = args[1];
 
-		try (CHBTCClient client = new CHBTCClient(username, password)) {
+		try (CHBTCClient client = new CHBTCClient(username, password, 5000, 5000, 5000)) {
 			// do nothing, just to test the logout calling when does not login
 			// in close method.
 		}
 
-		try (CHBTCClient client = new CHBTCClient(username, password)) {
+		try (CHBTCClient client = new CHBTCClient(username, password, 5000, 5000, 5000)) {
 			// Ticker.
 			Ticker ticker = client.getTicker();
 			log.info("Ticker: {}", ticker);
