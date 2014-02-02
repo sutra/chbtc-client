@@ -6,7 +6,7 @@
 
 	<groupId>com.redv</groupId>
 	<artifactId>chbtc-client</artifactId>
-	<version>1.2.6</version>
+	<version>1.2.7</version>
 
 	<name>CHBTC Client</name>
 	<description>
@@ -125,7 +125,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.3.2-SNAPSHOT</version>
+			<version>4.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
