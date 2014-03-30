@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.EntrustDetail;
+import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.Trade;
 
@@ -17,15 +18,10 @@ public class Main {
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) throws IOException {
-		final String username = args[0];
-		final String password = args[1];
+		final String accessKey = args[0];
+		final String secretKey = args[1];
 
-		try (CHBTCClient client = new CHBTCClient(username, password, 5000, 5000, 5000)) {
-			// do nothing, just to test the logout calling when does not login
-			// in close method.
-		}
-
-		try (CHBTCClient client = new CHBTCClient(username, password, 5000, 5000, 5000)) {
+		try (CHBTCClient client = new CHBTCClient(accessKey, secretKey, 5000, 5000, 5000)) {
 			// Ticker.
 			Ticker ticker = client.getTicker();
 			log.info("Ticker: {}", ticker);
@@ -46,15 +42,14 @@ public class Main {
 			trades = client.getTrades(200);
 			log.info("Trades since 200: {}", trades);
 
-			// Balance.
-			Balance balance;
-
-			try {
-				balance = client.getBalance();
-			} catch (LoginRequiredException e) {
-				client.login();
-				balance = client.getBalance();
+			// getUnfinishedOrdersIgnoreTradeType
+			List<Order> orders = client.getUnfinishedOrdersIgnoreTradeType("BTC", 1, 20);
+			for (Order order : orders) {
+				System.out.println(order);
 			}
+
+			// Balance.
+			Balance balance = client.getBalance();
 			log.info("Blance: {}", balance);
 
 			// All entrusts

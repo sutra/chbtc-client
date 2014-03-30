@@ -2,7 +2,7 @@ package com.redv.chbtc.domain;
 
 public enum Type {
 
-	BUY("buy"), SELL("sell");
+	BUY(1, "buy"), SELL(0, "sell");
 
 	public static Type toType(String typeString) {
 		for (Type type : Type.values()) {
@@ -14,10 +14,27 @@ public enum Type {
 		throw new IllegalArgumentException("Unexpected type: " + typeString);
 	}
 
+	public static Type toType(int tradeType) {
+		for (Type type : Type.values()) {
+			if (type.tradeType == tradeType) {
+				return type;
+			}
+		}
+
+		throw new IllegalArgumentException("Unexpected trade type: " + tradeType);
+	}
+
+	private int tradeType;
+
 	private String type;
 
-	Type(String type) {
+	Type(int tradeType, String type) {
+		this.tradeType = tradeType;
 		this.type = type;
+	}
+
+	public int getTradeType() {
+		return tradeType;
 	}
 
 }

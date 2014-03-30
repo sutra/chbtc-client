@@ -1,9 +1,19 @@
 package com.redv.chbtc.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EntrustDetail extends AbstractObject {
+
+	public static List<EntrustDetail> toEntrustDetails(List<Order> orders) {
+		List<EntrustDetail> entrustDetails = new ArrayList<EntrustDetail>(orders.size());
+		for (Order order : orders) {
+			entrustDetails.add(new EntrustDetail(order));
+		}
+		return entrustDetails;
+	}
 
 	private static final long serialVersionUID = 2013120901L;
 
@@ -48,6 +58,19 @@ public class EntrustDetail extends AbstractObject {
 		this.total = total;
 		this.filled = filled;
 		this.status = status;
+	}
+
+	public EntrustDetail(Order order) {
+		this.id = String.valueOf(order.getId());
+		this.date = order.getTradeDate();
+		this.type = order.getType();
+		this.price = order.getPrice();
+		this.avgPrice = order.getPrice();
+		this.amount = order.getTotalAmount();
+		this.filledAmount = order.getTradeAmount();
+		this.total = order.getPrice().multiply(order.getTotalAmount());
+		this.filled = order.getTradeMoney();
+		this.status = order.getStatus();
 	}
 
 	/**
