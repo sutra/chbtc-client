@@ -1,6 +1,7 @@
 package com.redv.chbtc.domain;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class Balance extends AbstractObject {
 
@@ -26,7 +27,20 @@ public class Balance extends AbstractObject {
 
 	private String currencyN;
 
+	/**
+	 * 货币标识。
+	 */
 	private String currency;
+
+	/**
+	 * 货币符号。
+	 */
+	private String symbol;
+
+	/**
+	 * 货币总量。
+	 */
+	private BigDecimal amount;
 
 	public Balance() {
 	}
@@ -47,6 +61,20 @@ public class Balance extends AbstractObject {
 		this.total = total;
 		this.currencyN = currencyN;
 		this.currency = currency;
+	}
+
+	public Balance(AccountInfo accountInfo) {
+		if (accountInfo.isSuccess()) {
+			Result result = accountInfo.getResult();
+			Map<String, Balance> balance = result.getBalance();
+			Map<String, Balance> frozen = result.getFrozen();
+			this.rmb = balance.get("CNY").getAmount();
+			this.rmbFreez = frozen.get("CNY").getAmount();
+			this.btc = balance.get("BTC").getAmount();
+			this.btcFreez = frozen.get("BTC").getAmount();
+			this.ltc = balance.get("LTC").getAmount();
+			this.ltcFreez = frozen.get("LTC").getAmount();
+		}
 	}
 
 	/**
@@ -124,6 +152,14 @@ public class Balance extends AbstractObject {
 	 */
 	public String getCurrency() {
 		return currency;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
 	}
 
 }

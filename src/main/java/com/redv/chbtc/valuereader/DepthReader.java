@@ -12,8 +12,8 @@ import com.redv.chbtc.domain.Depth;
  */
 public class DepthReader extends JsonValueReader<Depth>{
 
-	public DepthReader() {
-		super(new ObjectMapper(), Depth.class);
+	public DepthReader(final ObjectMapper objectMapper) {
+		super(objectMapper, Depth.class);
 	}
 
 	@Override
