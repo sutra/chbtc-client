@@ -1,5 +1,6 @@
 package com.redv.chbtc.domain;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class Result extends AbstractObject {
@@ -18,6 +19,8 @@ public class Result extends AbstractObject {
 	 */
 	private Map<String, Balance> frozen;
 
+	private Map<String, BigDecimal> p2p;
+
 	public Base getBase() {
 		return base;
 	}
@@ -28,6 +31,10 @@ public class Result extends AbstractObject {
 
 	public Map<String, Balance> getFrozen() {
 		return frozen;
+	}
+
+	public Map<String, BigDecimal> getP2p() {
+		return p2p;
 	}
 
 }
