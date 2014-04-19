@@ -87,6 +87,9 @@ public class CHBTCClient implements AutoCloseable {
 
 	private final String secretKey;
 
+	/**
+	 * @deprecated this will be deleted from 1.4.0.
+	 */
 	@Deprecated
 	public CHBTCClient(
 			final String username,
@@ -189,16 +192,23 @@ public class CHBTCClient implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * @deprecated this will be deleted from 1.4.0.
+	 */
 	@Deprecated
 	public void login() throws IOException {
 	}
 
+	/**
+	 * @deprecated this will be deleted from 1.4.0.
+	 */
 	@Deprecated
 	public void logout() throws IOException {
 	}
 
 	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)} instead.
+	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public void bid(final BigDecimal unitPrice, BigDecimal btcNumber)
@@ -207,7 +217,8 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)} instead.
+	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public void ask(final BigDecimal unitPrice, BigDecimal btcNumber)
@@ -216,7 +227,8 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)} instead.
+	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public void entrust(
@@ -231,7 +243,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * Cancel the open order.
 	 * @param id the order ID.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #cancelOrder(long, String)} instead.
+	 * @deprecated Use {@link #cancelOrder(long, String)} instead,
+	 * and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public void cancel(String id) throws IOException {
@@ -241,7 +254,8 @@ public class CHBTCClient implements AutoCloseable {
 	/**
 	 * @return
 	 * @throws IOException
-	 * @deprecated Use {@link #getAccountInfo()} instead.
+	 * @deprecated Use {@link #getAccountInfo()} instead,
+	 * and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public Balance getBalance() throws IOException {
@@ -254,7 +268,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * Returns the first page of all entrusts.
 	 * @return the first page of all entrusts.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)} instead.
+	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public List<EntrustDetail> getAll() throws IOException {
@@ -266,7 +281,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param page 1 based.
 	 * @return all entrusts.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)} instead.
+	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public List<EntrustDetail> getAll(int page) throws IOException {
@@ -278,7 +294,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * Returns all buying/selling entrusts.
 	 * @return all buying/selling entrusts.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)} instead.
+	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public List<EntrustDetail> getAllBuying() throws IOException {
@@ -300,7 +317,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * Returns the first page of buying/selling entrusts.
 	 * @return the first page of buying/selling entrusts.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)} instead.
+	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public List<EntrustDetail> getBuying() throws IOException {
@@ -312,7 +330,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param page 1 based
 	 * @return buying/selling entrusts.
 	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)} instead.
+	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
+	 * instead, and will be deleted from 1.4.0.
 	 */
 	@Deprecated
 	public List<EntrustDetail> getBuying(int page) throws IOException {
