@@ -1,6 +1,8 @@
 package com.redv.chbtc.domain;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.Map;
 
 public class Balance extends AbstractObject {
@@ -156,6 +158,14 @@ public class Balance extends AbstractObject {
 
 	public String getSymbol() {
 		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		try {
+			this.symbol = URLDecoder.decode(symbol, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public BigDecimal getAmount() {
