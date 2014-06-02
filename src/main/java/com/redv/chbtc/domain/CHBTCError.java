@@ -16,6 +16,9 @@ public class CHBTCError extends AbstractObject {
 
 	public static final int INSUFFICIENT_LTC_BALANCE = 2003;
 
+	/**
+	 * 挂单没有找到
+	 */
 	public static final int NOT_FOUND_ORDER = 3001;
 
 	public static final int INVALID_MONEY = 3002;
