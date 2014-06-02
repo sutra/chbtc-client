@@ -30,4 +30,8 @@ public class CHBTCClientException extends IOException {
 		return error;
 	}
 
+	public int getErrorCode() {
+		return error.getCode();
+	}
+
 }

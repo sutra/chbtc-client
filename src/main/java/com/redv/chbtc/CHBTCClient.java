@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -498,11 +499,16 @@ public class CHBTCClient implements AutoCloseable {
 			final int pageIndex,
 			final int pageSize
 			) throws IOException {
-		return get(METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE,
-				ORDER_LIST_READER,
-				new BasicNameValuePair("currency", currency),
-				new BasicNameValuePair("pageIndex", String.valueOf(pageIndex)),
-				new BasicNameValuePair("pageSize", String.valueOf(pageSize)));
+		try {
+			return getUnfinishedOrdersIgnoreTradeTypeInternal(currency,
+					pageIndex, pageSize);
+		} catch (CHBTCClientException e) {
+			if (e.getErrorCode() == CHBTCError.NOT_FOUND_ORDER) {
+				return Collections.emptyList();
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	/**
@@ -510,6 +516,16 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	public AccountInfo getAccountInfo() throws IOException {
 		return get(METHOD_GET_ACCOUNT_INFO, AccountInfo.class);
+	}
+
+	private List<Order> getUnfinishedOrdersIgnoreTradeTypeInternal(
+			final String currency, final int pageIndex, final int pageSize)
+			throws IOException {
+		return get(METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE,
+				ORDER_LIST_READER,
+				new BasicNameValuePair("currency", currency),
+				new BasicNameValuePair("pageIndex", String.valueOf(pageIndex)),
+				new BasicNameValuePair("pageSize", String.valueOf(pageSize)));
 	}
 
 	private <T> T get(
