@@ -1,6 +1,7 @@
 package com.redv.chbtc.service.polling;
 
-import com.redv.chbtc.CHBTC;
+import java.io.IOException;
+
 import com.redv.chbtc.domain.AccountInfo;
 import com.xeiam.xchange.ExchangeSpecification;
 
@@ -13,12 +14,8 @@ public class CHBTCAccountServiceRaw extends CHBTCBaseTradePollingService {
 		super(exchangeSpecification);
 	}
 
-	public AccountInfo getCHBTCAccountInfo() {
-		return chbtc.getAccountInfo(
-				CHBTC.METHOD_GET_ACCOUNT_INFO,
-				accessKey,
-				sign(CHBTC.METHOD_GET_ACCOUNT_INFO),
-				getReqTime());
+	public AccountInfo getCHBTCAccountInfo() throws IOException {
+		return client.getAccountInfo();
 	}
 
 }

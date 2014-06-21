@@ -11,9 +11,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.Depth.Data;
-import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Order;
-import com.redv.chbtc.domain.OrderResponse;
 import com.redv.chbtc.domain.Result;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Type;
@@ -105,15 +103,6 @@ public class CHBTCAdapters {
 		}
 
 		return new AccountInfo(result.getBase().getUsername(), wallets);
-	}
-
-	public static String adaptOrderResponse(OrderResponse orderResponse)
-			throws CHBTCClientException {
-		if (orderResponse.getCode() == CHBTCError.SUCCESS) {
-			return String.valueOf(orderResponse.getId());
-		} else {
-			throw new CHBTCClientException(orderResponse);
-		}
 	}
 
 	public static List<LimitOrder> adaptLimitOrders(Order[] orders) {

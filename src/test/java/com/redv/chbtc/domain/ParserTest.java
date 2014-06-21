@@ -1,15 +1,10 @@
 package com.redv.chbtc.domain;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
 
@@ -45,14 +40,4 @@ public class ParserTest {
 		assertEquals(80, trades.size());
 	}
 
-	@Test
-	public void testParseLog() throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
-		Unmarshaller um = jaxbContext.createUnmarshaller();
-		Root root = (Root) um.unmarshal(getClass().getResource("login.xml"));
-		assertEquals("https://www.chbtc.com", root.getTitle());
-		assertTrue(root.isSuccess());
-		assertEquals("https://www.chbtc.com", root.getDes());
-		assertEquals("https://www.chbtc.com", root.getMainData());
-	}
 }

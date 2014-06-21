@@ -6,8 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.redv.chbtc.domain.Balance;
-import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Order;
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeFactory;
@@ -81,51 +79,6 @@ public class Main {
 			List<Order> orders = client.getUnfinishedOrdersIgnoreTradeType("BTC", 1, 20);
 			for (Order order : orders) {
 				System.out.println(order);
-			}
-
-			// Balance.
-			Balance balance = client.getBalance();
-			log.info("Blance: {}", balance);
-
-			// All entrusts
-			List<EntrustDetail> all = client.getAll();
-			for (EntrustDetail entrustDetail : all) {
-				log.info("{}", entrustDetail);
-			}
-
-			for (int page = 1; page <= 2; page++) {
-				List<EntrustDetail> allPage = client.getAll(page);
-				log.info("get all of page {}, record count {}", page, allPage.size());
-				for (EntrustDetail entrustDetail : allPage) {
-					log.info("{}", entrustDetail);
-				}
-			}
-
-			// Buying/Selling entrusts
-			client.getBuying();
-			List<EntrustDetail> buying = client.getBuying();
-			for (EntrustDetail entrustDetail : buying) {
-				log.info("{}", entrustDetail);
-			}
-
-			for (int page = 1; page <= 2; page++) {
-				List<EntrustDetail> buyingPage = client.getBuying(page);
-				log.info("get buying of page {}, record count {}", page, buyingPage.size());
-				for (EntrustDetail entrustDetail : buyingPage) {
-					log.info("{}", entrustDetail);
-				}
-			}
-
-			List<EntrustDetail> allBuying = client.getAllBuying();
-			for (EntrustDetail entrustDetail : allBuying) {
-				log.info("{}", entrustDetail);
-			}
-
-			// Cancel
-			try {
-				client.cancel("201312131142385");
-			} catch (NoCancelableEntrustException e) {
-				log.info("{}", e.getLocalizedMessage());
 			}
 		}
 	}

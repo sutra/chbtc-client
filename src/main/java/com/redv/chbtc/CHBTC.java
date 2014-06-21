@@ -24,6 +24,10 @@ public interface CHBTC {
 	static final String METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE = "getUnfinishedOrdersIgnoreTradeType";
 	static final String METHOD_GET_ACCOUNT_INFO = "getAccountInfo";
 
+	/**
+	 * @deprecated Use {@link CHBTCClient#order(java.math.BigDecimal, java.math.BigDecimal, com.redv.chbtc.domain.Type, String)} instead.
+	 */
+	@Deprecated
 	@GET
 	@Path("order")
 	OrderResponse order(
@@ -36,6 +40,10 @@ public interface CHBTC {
 			@QueryParam("sign") String sign,
 			@QueryParam("reqTime") long reqTime);
 
+	/**
+	 * @deprecated Use {@link CHBTCClient#cancelOrder(long, String)} instead.
+	 */
+	@Deprecated
 	@GET
 	@Path("cancelOrder")
 	CHBTCError cancelOrder(
@@ -46,6 +54,10 @@ public interface CHBTC {
 			@QueryParam("sign") String sign,
 			@QueryParam("reqTime") long reqTime);
 
+	/**
+	 * @deprecated Use {@link CHBTCClient#getOrder(long, String)} instead.
+	 */
+	@Deprecated
 	@GET
 	@Path("getOrder")
 	Order getOrder(
@@ -121,6 +133,10 @@ public interface CHBTC {
 			@QueryParam("sign") String sign,
 			@QueryParam("reqTime") long reqTime);
 
+	/**
+	 * @deprecated Use {@link CHBTCClient#getAccountInfo()} instead.
+	 */
+	@Deprecated
 	@GET
 	@Path("getAccountInfo")
 	AccountInfo getAccountInfo(

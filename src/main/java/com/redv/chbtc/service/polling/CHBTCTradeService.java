@@ -8,7 +8,6 @@ import com.redv.chbtc.CHBTCAdapters;
 import com.redv.chbtc.CHBTCClientException;
 import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Order;
-import com.redv.chbtc.domain.OrderResponse;
 import com.xeiam.xchange.ExchangeException;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.NotAvailableFromExchangeException;
@@ -77,12 +76,12 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 	public String placeLimitOrder(LimitOrder limitOrder)
 			throws ExchangeException, NotAvailableFromExchangeException,
 			NotYetImplementedForExchangeException, IOException {
-		OrderResponse orderResponse = order(
+		long orderId = order(
 				limitOrder.getLimitPrice(),
 				limitOrder.getTradableAmount(),
 				CHBTCAdapters.adaptType(limitOrder.getType()),
 				CHBTCAdapters.adaptCurrency(limitOrder.getCurrencyPair()));
-		return CHBTCAdapters.adaptOrderResponse(orderResponse);
+		return String.valueOf(orderId);
 	}
 
 	/**
@@ -92,23 +91,23 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 	public boolean cancelOrder(String orderId) throws ExchangeException,
 			NotAvailableFromExchangeException,
 			NotYetImplementedForExchangeException, IOException {
-		CHBTCError lastError = null;
+		boolean success = false;
 
 		for (CurrencyPair currencyPair : getExchangeSymbols()) {
-			lastError = cancelOrder(Long.parseLong(orderId),
-					CHBTCAdapters.adaptCurrency(currencyPair));
-			if (lastError.getCode() == CHBTCError.NOT_FOUND_ORDER) {
-				continue;
-			} else {
-				break;
+			try {
+				cancelOrder(Long.parseLong(orderId),
+						CHBTCAdapters.adaptCurrency(currencyPair));
+				success = true;
+			} catch (CHBTCClientException e) {
+				if (e.getErrorCode() == CHBTCError.NOT_FOUND_ORDER) {
+					continue;
+				} else {
+					throw e;
+				}
 			}
 		}
 
-		if (lastError != null && lastError.getCode() == CHBTCError.SUCCESS) {
-			return true;
-		}
-
-		throw new CHBTCClientException(lastError);
+		return success;
 	}
 
 	/**

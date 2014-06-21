@@ -27,11 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redv.chbtc.domain.Root;
 import com.redv.chbtc.valuereader.JsonValueReader;
 import com.redv.chbtc.valuereader.JsonValueTypeRefReader;
-import com.redv.chbtc.valuereader.JsonpValueReader;
-import com.redv.chbtc.valuereader.RootValueReader;
 import com.redv.chbtc.valuereader.ValueReader;
 
 public class HttpClient implements AutoCloseable {
@@ -85,16 +82,6 @@ public class HttpClient implements AutoCloseable {
 
 	public <T> T get(URI uri, ValueReader<T> valueReader) throws IOException {
 		return execute(valueReader, new HttpGet(uri));
-	}
-
-	public <T> T get(URI uri, TypeReference<T> valueTypeRef, String method)
-			throws IOException {
-		return get(uri, new JsonpValueReader<T>(objectMapper, method, valueTypeRef));
-	}
-
-	public Root post(URI uri, NameValuePair... params) throws IOException {
-		ValueReader<Root> rootValueReader = new RootValueReader();
-		return post(uri, rootValueReader, params);
 	}
 
 	public <T> T post(URI uri, ValueReader<T> valueReader,

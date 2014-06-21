@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,45 +19,52 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redv.chbtc.domain.AccountInfo;
-import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Depth;
-import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.OrderResponse;
 import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 import com.redv.chbtc.domain.Type;
-import com.redv.chbtc.service.polling.CHBTCAccountService;
 import com.redv.chbtc.service.polling.CHBTCMarketDataService;
 import com.redv.chbtc.util.EncryDigestUtil;
 import com.redv.chbtc.valuereader.DepthReader;
 import com.redv.chbtc.valuereader.ErrorableJsonValueTypeRefReader;
 import com.redv.chbtc.valuereader.ValueReader;
+import com.xeiam.xchange.currency.Currencies;
 import com.xeiam.xchange.currency.CurrencyPair;
 
 public class CHBTCClient implements AutoCloseable {
 
 	public static final String ENCODING = "UTF-8";
 
-	private static final String CURRENCY_BTC = "BTC";
-	private static final String CURRENCY_LTC = "LTC";
-
+	@Deprecated
 	private static final URI API_BASE_URI = URI.create("http://api.chbtc.com/");
 
+	@Deprecated
 	private static final URI DATA_BASE_URI = URIUtils.resolve(API_BASE_URI, "data/");
 
+	@Deprecated
 	private static final URI TICKER_URI = URIUtils.resolve(DATA_BASE_URI, "ticker");
+
+	@Deprecated
 	private static final URI DEPTH_URI = URIUtils.resolve(DATA_BASE_URI, "depth");
+
+	@Deprecated
 	private static final URI TRADES_URI = URIUtils.resolve(DATA_BASE_URI, "trades");
 
+	@Deprecated
 	private static final URI LTC_DATA_BASE_URI = URIUtils.resolve(DATA_BASE_URI, "ltc");
-	private static final URI LTC_TICKER_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "ticker");
-	private static final URI LTC_DEPTH_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "depth");
-	private static final URI LTC_TRADES_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "trades");
 
-	private static final String TRADE_API_URL = "https://trade.chbtc.com/api/";
+	@Deprecated
+	private static final URI LTC_TICKER_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "ticker");
+
+	@Deprecated
+	private static final URI LTC_DEPTH_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "depth");
+
+	@Deprecated
+	private static final URI LTC_TRADES_URI = URIUtils.resolve(LTC_DATA_BASE_URI, "trades");
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -78,29 +84,11 @@ public class CHBTCClient implements AutoCloseable {
 
 	private final HttpClient httpClient;
 
+	private final String tradeApiUrl;
+
 	private final String accessKey;
 
 	private final String secretKey;
-
-	/**
-	 * @deprecated this will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public CHBTCClient(
-			final String username,
-			final String password,
-			final String safePassword,
-			final int socketTimeout,
-			final int connectTimeout,
-			final int connectionRequestTimeout) {
-		httpClient = new HttpClient(
-				socketTimeout,
-				connectTimeout,
-				connectionRequestTimeout);
-
-		this.accessKey = null;
-		this.secretKey = null;
-	}
 
 	public CHBTCClient(
 			final String accessKey,
@@ -108,6 +96,19 @@ public class CHBTCClient implements AutoCloseable {
 			final int socketTimeout,
 			final int connectTimeout,
 			final int connectionRequestTimeout) {
+		this("https://trade.chbtc.com/api/", accessKey, secretKey,
+				socketTimeout, connectTimeout, connectionRequestTimeout);
+	}
+
+	public CHBTCClient(
+			final String tradeApiUrl,
+			final String accessKey,
+			final String secretKey,
+			final int socketTimeout,
+			final int connectTimeout,
+			final int connectionRequestTimeout) {
+		this.tradeApiUrl = tradeApiUrl;
+
 		httpClient = new HttpClient(
 				socketTimeout,
 				connectTimeout,
@@ -130,7 +131,7 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	@Deprecated
 	public Ticker getTicker(String currency) throws IOException {
-		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
+		if (currency.equalsIgnoreCase(Currencies.LTC)) {
 			return httpClient.get(LTC_TICKER_URI, TickerResponse.class)
 					.getTicker();
 		} else {
@@ -151,7 +152,7 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	@Deprecated
 	public Depth getDepth(String currency) throws IOException {
-		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
+		if (currency.equalsIgnoreCase(Currencies.LTC)) {
 			return httpClient.get(LTC_DEPTH_URI, DEPTH_READER);
 		} else {
 			return getDepth();
@@ -188,7 +189,7 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	@Deprecated
 	public List<Trade> getTrades(String currency) throws IOException {
-		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
+		if (currency.equalsIgnoreCase(Currencies.LTC)) {
 			return httpClient.get(LTC_TRADES_URI, TRADE_LIST_TYPE_REFERENCE);
 		} else {
 			return getTrades();
@@ -203,7 +204,7 @@ public class CHBTCClient implements AutoCloseable {
 			String currency,
 			int since
 			) throws IOException {
-		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
+		if (currency.equalsIgnoreCase(Currencies.LTC)) {
 			final URI uri;
 			try {
 				uri = new URIBuilder(LTC_TRADES_URI)
@@ -217,153 +218,6 @@ public class CHBTCClient implements AutoCloseable {
 		} else {
 			return getTrades(since);
 		}
-	}
-
-	/**
-	 * @deprecated this will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void login() throws IOException {
-	}
-
-	/**
-	 * @deprecated this will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void logout() throws IOException {
-	}
-
-	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void bid(final BigDecimal unitPrice, BigDecimal btcNumber)
-			throws IOException {
-		entrust(Type.BUY, unitPrice, btcNumber);
-	}
-
-	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void ask(final BigDecimal unitPrice, BigDecimal btcNumber)
-			throws IOException {
-		entrust(Type.SELL, unitPrice, btcNumber);
-	}
-
-	/**
-	 * @deprecated Use {@link #order(BigDecimal, BigDecimal, Type, String)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void entrust(
-			final Type type,
-			final BigDecimal unitPrice,
-			final BigDecimal btcNumber
-			) throws IOException {
-		order(unitPrice, btcNumber, type, CURRENCY_BTC);
-	}
-
-	/**
-	 * Cancel the open order.
-	 * @param id the order ID.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #cancelOrder(long, String)} instead,
-	 * and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public void cancel(String id) throws IOException {
-		cancelOrder(Long.parseLong(id), CURRENCY_BTC);
-	}
-
-	/**
-	 * @return
-	 * @throws IOException
-	 * @deprecated Use {@link #getAccountInfo()} instead,
-	 * and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public Balance getBalance() throws IOException {
-		AccountInfo accountInfo = getAccountInfo();
-		Balance balance = new Balance(accountInfo);
-		return balance;
-	}
-
-	/**
-	 * Returns the first page of all entrusts.
-	 * @return the first page of all entrusts.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public List<EntrustDetail> getAll() throws IOException {
-		return getAll(1);
-	}
-
-	/**
-	 * Returns all entrusts.
-	 * @param page 1 based.
-	 * @return all entrusts.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getOrdersIgnoreTradeType(String, int, int)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public List<EntrustDetail> getAll(int page) throws IOException {
-		return EntrustDetail.toEntrustDetails(
-				getOrdersIgnoreTradeType(CURRENCY_BTC, page, 20));
-	}
-
-	/**
-	 * Returns all buying/selling entrusts.
-	 * @return all buying/selling entrusts.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public List<EntrustDetail> getAllBuying() throws IOException {
-		List<EntrustDetail> allBuying = new ArrayList<>();
-
-		List<EntrustDetail> buying;
-		int page = 1;
-		do {
-			buying = getBuying(page);
-			allBuying.addAll(buying);
-			log.debug("Page: {}, record count: {}", page, buying.size());
-			page++;
-		} while (buying.size() == 10);
-
-		return allBuying;
-	}
-
-	/**
-	 * Returns the first page of buying/selling entrusts.
-	 * @return the first page of buying/selling entrusts.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public List<EntrustDetail> getBuying() throws IOException {
-		return getBuying(1);
-	}
-
-	/**
-	 * Returns buying/selling entrusts.
-	 * @param page 1 based
-	 * @return buying/selling entrusts.
-	 * @throws IOException indicates I/O exception.
-	 * @deprecated Use {@link #getUnfinishedOrdersIgnoreTradeType(String, int, int)}
-	 * instead, and will be deleted from 1.4.0.
-	 */
-	@Deprecated
-	public List<EntrustDetail> getBuying(int page) throws IOException {
-		return EntrustDetail.toEntrustDetails(
-				getUnfinishedOrdersIgnoreTradeType(CURRENCY_BTC, 1, page));
 	}
 
 	/**
@@ -545,9 +399,7 @@ public class CHBTCClient implements AutoCloseable {
 
 	/**
 	 * 获取用户信息。
-	 * @deprecated Use {@link CHBTCAccountService#getAccountInfo()} instead.
 	 */
-	@Deprecated
 	public AccountInfo getAccountInfo() throws IOException {
 		return get(CHBTC.METHOD_GET_ACCOUNT_INFO, AccountInfo.class);
 	}
@@ -606,7 +458,7 @@ public class CHBTCClient implements AutoCloseable {
 
 		final String sign = EncryDigestUtil.hmacSign(params, secretKey);
 
-		final String uri = new StringBuilder(TRADE_API_URL)
+		final String uri = new StringBuilder(tradeApiUrl)
 			.append(method)
 			.append("?")
 			.append(params)
