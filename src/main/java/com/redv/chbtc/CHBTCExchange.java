@@ -3,6 +3,7 @@ package com.redv.chbtc;
 import java.util.Arrays;
 import java.util.List;
 
+import com.redv.chbtc.service.polling.CHBTCAccountService;
 import com.redv.chbtc.service.polling.CHBTCMarketDataService;
 import com.xeiam.xchange.BaseExchange;
 import com.xeiam.xchange.ExchangeSpecification;
@@ -23,6 +24,9 @@ public class CHBTCExchange extends BaseExchange {
 	public void applySpecification(ExchangeSpecification exchangeSpecification) {
 		super.applySpecification(exchangeSpecification);
 		this.pollingMarketDataService = new CHBTCMarketDataService(exchangeSpecification);
+		if (exchangeSpecification.getApiKey() != null) {
+			this.pollingAccountService = new CHBTCAccountService(exchangeSpecification);
+		}
 	}
 
 	/**

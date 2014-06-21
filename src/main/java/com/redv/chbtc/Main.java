@@ -7,16 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.redv.chbtc.domain.Balance;
-import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Order;
-import com.redv.chbtc.domain.Ticker;
-import com.redv.chbtc.domain.Trade;
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeFactory;
+import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.CurrencyPair;
+import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Trades;
+import com.xeiam.xchange.service.polling.PollingAccountService;
 import com.xeiam.xchange.service.polling.PollingMarketDataService;
 
 public class Main {
@@ -52,6 +52,17 @@ public class Main {
 		log.info("LTC trades: {}", trades0);
 		trades0 = marketDataService.getTrades(CurrencyPair.LTC_CNY, trades0.getlastID());
 		log.info("LTC trades since {}: {}", trades0.getlastID(), trades0);
+
+		ExchangeSpecification spec = new ExchangeSpecification(CHBTCExchange.class);
+		spec.setApiKey(accessKey);
+		spec.setSecretKey(secretKey);
+
+		// Account service.
+		Exchange tradeExchange = ExchangeFactory.INSTANCE.createExchange(spec);
+		PollingAccountService accountService = tradeExchange.getPollingAccountService();
+
+		AccountInfo accountInfo = accountService.getAccountInfo();
+		log.info("Account info: {}", accountInfo);
 
 		try (CHBTCClient client = new CHBTCClient(accessKey, secretKey, 5000, 5000, 5000)) {
 			// getUnfinishedOrdersIgnoreTradeType

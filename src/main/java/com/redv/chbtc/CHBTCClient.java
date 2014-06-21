@@ -30,6 +30,7 @@ import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 import com.redv.chbtc.domain.Type;
+import com.redv.chbtc.service.polling.CHBTCAccountService;
 import com.redv.chbtc.service.polling.CHBTCMarketDataService;
 import com.redv.chbtc.util.EncryDigestUtil;
 import com.redv.chbtc.valuereader.DepthReader;
@@ -547,7 +548,9 @@ public class CHBTCClient implements AutoCloseable {
 
 	/**
 	 * 获取用户信息。
+	 * @deprecated Use {@link CHBTCAccountService#getAccountInfo()} instead.
 	 */
+	@Deprecated
 	public AccountInfo getAccountInfo() throws IOException {
 		return get(METHOD_GET_ACCOUNT_INFO, AccountInfo.class);
 	}
