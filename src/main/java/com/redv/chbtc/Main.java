@@ -12,6 +12,12 @@ import com.redv.chbtc.domain.EntrustDetail;
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.Trade;
+import com.xeiam.xchange.Exchange;
+import com.xeiam.xchange.ExchangeFactory;
+import com.xeiam.xchange.currency.CurrencyPair;
+import com.xeiam.xchange.dto.marketdata.OrderBook;
+import com.xeiam.xchange.dto.marketdata.Trades;
+import com.xeiam.xchange.service.polling.PollingMarketDataService;
 
 public class Main {
 
@@ -21,27 +27,33 @@ public class Main {
 		final String accessKey = args[0];
 		final String secretKey = args[1];
 
+		// Market data service
+		Exchange publicExchange = ExchangeFactory.INSTANCE.createExchange(CHBTCExchange.class.getName());
+		PollingMarketDataService marketDataService = publicExchange.getPollingMarketDataService();
+
+		// Ticker
+		com.xeiam.xchange.dto.marketdata.Ticker ticker0 = marketDataService.getTicker(CurrencyPair.BTC_CNY);
+		log.info("BTC ticker: {}", ticker0);
+		ticker0 = marketDataService.getTicker(CurrencyPair.LTC_CNY);
+		log.info("LTC ticker: {}", ticker0);
+
+		// Depth
+		OrderBook orderBook = marketDataService.getOrderBook(CurrencyPair.BTC_CNY);
+		log.info("BTC order book: {}", orderBook);
+		orderBook = marketDataService.getOrderBook(CurrencyPair.LTC_CNY);
+		log.info("LTC order book: {}", orderBook);
+
+		// Trades
+		Trades trades0 = marketDataService.getTrades(CurrencyPair.BTC_CNY);
+		log.info("BTC trades: {}", trades0);
+		trades0 = marketDataService.getTrades(CurrencyPair.BTC_CNY, trades0.getlastID());
+		log.info("BTC trades since {}: {}", trades0.getlastID(), trades0);
+		trades0 = marketDataService.getTrades(CurrencyPair.LTC_CNY);
+		log.info("LTC trades: {}", trades0);
+		trades0 = marketDataService.getTrades(CurrencyPair.LTC_CNY, trades0.getlastID());
+		log.info("LTC trades since {}: {}", trades0.getlastID(), trades0);
+
 		try (CHBTCClient client = new CHBTCClient(accessKey, secretKey, 5000, 5000, 5000)) {
-			// Ticker.
-			Ticker ticker = client.getTicker();
-			log.info("Ticker: {}", ticker);
-			log.info("Sell: {}", ticker.getSell());
-			log.info("Buy: {}", ticker.getBuy());
-
-			// Depth.
-			Depth depth = client.getDepth();
-			log.info("Depth.asks: {}", depth.getAsks());
-			log.info("Depth.bids: {}", depth.getBids());
-			log.info("Lowest ask: {}", depth.getAsks().get(0));
-			log.info("Highest bid: {}", depth.getBids().get(0));
-
-			// Trades.
-			List<Trade> trades = client.getTrades();
-			log.info("Trades: {}", trades);
-
-			trades = client.getTrades(200);
-			log.info("Trades since 200: {}", trades);
-
 			// getUnfinishedOrdersIgnoreTradeType
 			List<Order> orders = client.getUnfinishedOrdersIgnoreTradeType("BTC", 1, 20);
 			for (Order order : orders) {

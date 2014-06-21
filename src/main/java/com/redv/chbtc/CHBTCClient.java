@@ -30,10 +30,12 @@ import com.redv.chbtc.domain.Ticker;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
 import com.redv.chbtc.domain.Type;
+import com.redv.chbtc.service.polling.CHBTCMarketDataService;
 import com.redv.chbtc.util.EncryDigestUtil;
 import com.redv.chbtc.valuereader.DepthReader;
 import com.redv.chbtc.valuereader.ErrorableJsonValueTypeRefReader;
 import com.redv.chbtc.valuereader.ValueReader;
+import com.xeiam.xchange.currency.CurrencyPair;
 
 public class CHBTCClient implements AutoCloseable {
 
@@ -123,10 +125,18 @@ public class CHBTCClient implements AutoCloseable {
 		this.secretKey = EncryDigestUtil.digest(secretKey);
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTicker(CurrencyPair)} instead.
+	 */
+	@Deprecated
 	public Ticker getTicker() throws IOException {
 		return httpClient.get(TICKER_URI, TickerResponse.class).getTicker();
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTicker(CurrencyPair)} instead.
+	 */
+	@Deprecated
 	public Ticker getTicker(String currency) throws IOException {
 		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
 			return httpClient.get(LTC_TICKER_URI, TickerResponse.class)
@@ -136,10 +146,18 @@ public class CHBTCClient implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getOrderBook(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public Depth getDepth() throws IOException {
 		return httpClient.get(DEPTH_URI, DEPTH_READER);
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getOrderBook(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public Depth getDepth(String currency) throws IOException {
 		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
 			return httpClient.get(LTC_DEPTH_URI, DEPTH_READER);
@@ -148,10 +166,18 @@ public class CHBTCClient implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public List<Trade> getTrades() throws IOException {
 		return httpClient.get(TRADES_URI, TRADE_LIST_TYPE_REFERENCE);
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public List<Trade> getTrades(int since) throws IOException {
 		final URI uri;
 		try {
@@ -165,6 +191,10 @@ public class CHBTCClient implements AutoCloseable {
 		return httpClient.get(uri, TRADE_LIST_TYPE_REFERENCE);
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public List<Trade> getTrades(String currency) throws IOException {
 		if (currency.equalsIgnoreCase(CURRENCY_LTC)) {
 			return httpClient.get(LTC_TRADES_URI, TRADE_LIST_TYPE_REFERENCE);
@@ -173,6 +203,10 @@ public class CHBTCClient implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
+	 */
+	@Deprecated
 	public List<Trade> getTrades(
 			String currency,
 			int since
