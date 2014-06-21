@@ -88,7 +88,7 @@ public class CHBTCClient implements AutoCloseable {
 
 	private final String accessKey;
 
-	private final String secretKey;
+	private final String secret;
 
 	public CHBTCClient(
 			final String accessKey,
@@ -115,7 +115,7 @@ public class CHBTCClient implements AutoCloseable {
 				connectionRequestTimeout);
 
 		this.accessKey = accessKey;
-		this.secretKey = EncryDigestUtil.digest(secretKey);
+		this.secret = EncryDigestUtil.digest(secretKey);
 	}
 
 	/**
@@ -456,7 +456,7 @@ public class CHBTCClient implements AutoCloseable {
 
 		final String params = paramsBuilder.toString();
 
-		final String sign = EncryDigestUtil.hmacSign(params, secretKey);
+		final String sign = EncryDigestUtil.hmacSign(params, secret);
 
 		final String uri = new StringBuilder(tradeApiUrl)
 			.append(method)

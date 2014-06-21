@@ -17,6 +17,10 @@ public class CHBTCExchange extends BaseExchange {
 	 */
 	public static final String SYMBOLS_PARAMETER = "symbols";
 
+	public static final String SOCKET_TIMEOUT_PARAMETER = "socketTimeout";
+	public static final String CONNECT_TIMEOUT_PARAMETER = "connectTimeout";
+	public static final String CONNECTION_REQUEST_TIMEOUT_PARAMETER = "connectionRequestTimeout";
+
 	private static final List<CurrencyPair> SYMBOLS = Arrays.asList(
 			CurrencyPair.BTC_CNY,
 			CurrencyPair.LTC_CNY);
