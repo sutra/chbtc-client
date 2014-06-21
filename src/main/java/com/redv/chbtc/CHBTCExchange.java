@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.redv.chbtc.service.polling.CHBTCAccountService;
 import com.redv.chbtc.service.polling.CHBTCMarketDataService;
+import com.redv.chbtc.service.polling.CHBTCTradeService;
 import com.xeiam.xchange.BaseExchange;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.CurrencyPair;
@@ -26,6 +27,7 @@ public class CHBTCExchange extends BaseExchange {
 		this.pollingMarketDataService = new CHBTCMarketDataService(exchangeSpecification);
 		if (exchangeSpecification.getApiKey() != null) {
 			this.pollingAccountService = new CHBTCAccountService(exchangeSpecification);
+			this.pollingTradeService = new CHBTCTradeService(exchangeSpecification);
 		}
 	}
 

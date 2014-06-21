@@ -16,8 +16,10 @@ import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Trades;
+import com.xeiam.xchange.dto.trade.OpenOrders;
 import com.xeiam.xchange.service.polling.PollingAccountService;
 import com.xeiam.xchange.service.polling.PollingMarketDataService;
+import com.xeiam.xchange.service.polling.PollingTradeService;
 
 public class Main {
 
@@ -63,6 +65,16 @@ public class Main {
 
 		AccountInfo accountInfo = accountService.getAccountInfo();
 		log.info("Account info: {}", accountInfo);
+
+		PollingTradeService tradeSerivce = tradeExchange.getPollingTradeService();
+
+		// Open orders
+		OpenOrders openOrders = tradeSerivce.getOpenOrders();
+		log.info("Open orders({}): {}", openOrders.getOpenOrders().size(), openOrders);
+
+		// Trade history
+		Trades tradeHistory = tradeSerivce.getTradeHistory(CurrencyPair.BTC_CNY, 0, 1);
+		log.info("Trade history({}): {}", tradeHistory.getTrades().size(), tradeHistory);
 
 		try (CHBTCClient client = new CHBTCClient(accessKey, secretKey, 5000, 5000, 5000)) {
 			// getUnfinishedOrdersIgnoreTradeType

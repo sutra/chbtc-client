@@ -60,15 +60,6 @@ public class CHBTCClient implements AutoCloseable {
 
 	private static final String TRADE_API_URL = "https://trade.chbtc.com/api/";
 
-	private static final String METHOD_ORDER = "order";
-	private static final String METHOD_CANCEL_ORDER = "cancelOrder";
-	private static final String METHOD_GET_ORDER = "getOrder";
-	private static final String METHOD_GET_ORDERS = "getOrders";
-	private static final String METHOD_GET_ORDERS_NEW = "getOrdersNew";
-	private static final String METHOD_GET_ORDERS_IGNORE_TRADE_TYPE = "getOrdersIgnoreTradeType";
-	private static final String METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE = "getUnfinishedOrdersIgnoreTradeType";
-	private static final String METHOD_GET_ACCOUNT_INFO = "getAccountInfo";
-
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private static final DepthReader DEPTH_READER = new DepthReader(OBJECT_MAPPER);
@@ -399,7 +390,8 @@ public class CHBTCClient implements AutoCloseable {
 			final Type tradeType,
 			final String currency
 			) throws IOException {
-		OrderResponse orderResponse = get(METHOD_ORDER,
+		OrderResponse orderResponse = get(
+				CHBTC.METHOD_ORDER,
 				OrderResponse.class,
 				new BasicNameValuePair("price", price.toPlainString()),
 				new BasicNameValuePair("amount", amount.toPlainString()),
@@ -424,7 +416,8 @@ public class CHBTCClient implements AutoCloseable {
 			final long id,
 			final String currency
 			) throws IOException {
-		CHBTCError error = get(METHOD_CANCEL_ORDER,
+		CHBTCError error = get(
+				CHBTC.METHOD_CANCEL_ORDER,
 				CHBTCError.class,
 				new BasicNameValuePair("id", String.valueOf(id)),
 				new BasicNameValuePair("currency", currency));
@@ -446,7 +439,8 @@ public class CHBTCClient implements AutoCloseable {
 			final long id,
 			final String currency
 			) throws IOException {
-		return get(METHOD_GET_ORDER,
+		return get(
+				CHBTC.METHOD_GET_ORDER,
 				Order.class,
 				new BasicNameValuePair("id", String.valueOf(id)),
 				new BasicNameValuePair("currency", currency));
@@ -466,7 +460,8 @@ public class CHBTCClient implements AutoCloseable {
 			final String currency,
 			final int pageIndex
 			) throws IOException {
-		return get(METHOD_GET_ORDERS,
+		return get(
+				CHBTC.METHOD_GET_ORDERS,
 				ORDER_LIST_READER,
 				new BasicNameValuePair("tradeType",
 						String.valueOf(tradeType.getTradeType())),
@@ -490,7 +485,8 @@ public class CHBTCClient implements AutoCloseable {
 			final int pageIndex,
 			final int pageSize
 			) throws IOException {
-		return get(METHOD_GET_ORDERS_NEW,
+		return get(
+				CHBTC.METHOD_GET_ORDERS_NEW,
 				ORDER_LIST_READER,
 				new BasicNameValuePair("tradeType",
 						String.valueOf(tradeType.getTradeType())),
@@ -513,7 +509,8 @@ public class CHBTCClient implements AutoCloseable {
 			final int pageIndex,
 			final int pageSize
 			) throws IOException {
-		return get(METHOD_GET_ORDERS_IGNORE_TRADE_TYPE,
+		return get(
+				CHBTC.METHOD_GET_ORDERS_IGNORE_TRADE_TYPE,
 				ORDER_LIST_READER,
 				new BasicNameValuePair("currency", currency),
 				new BasicNameValuePair("pageIndex", String.valueOf(pageIndex)),
@@ -552,13 +549,14 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	@Deprecated
 	public AccountInfo getAccountInfo() throws IOException {
-		return get(METHOD_GET_ACCOUNT_INFO, AccountInfo.class);
+		return get(CHBTC.METHOD_GET_ACCOUNT_INFO, AccountInfo.class);
 	}
 
 	private List<Order> getUnfinishedOrdersIgnoreTradeTypeInternal(
 			final String currency, final int pageIndex, final int pageSize)
 			throws IOException {
-		return get(METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE,
+		return get(
+				CHBTC.METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE,
 				ORDER_LIST_READER,
 				new BasicNameValuePair("currency", currency),
 				new BasicNameValuePair("pageIndex", String.valueOf(pageIndex)),

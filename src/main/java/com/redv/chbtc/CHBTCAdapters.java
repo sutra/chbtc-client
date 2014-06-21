@@ -11,9 +11,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.Depth.Data;
+import com.redv.chbtc.domain.CHBTCError;
+import com.redv.chbtc.domain.Order;
+import com.redv.chbtc.domain.OrderResponse;
 import com.redv.chbtc.domain.Result;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Type;
+import com.xeiam.xchange.currency.Currencies;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
 import com.xeiam.xchange.dto.account.AccountInfo;
@@ -35,6 +39,18 @@ public class CHBTCAdapters {
 	 * Private constructor.
 	 */
 	private CHBTCAdapters() {
+	}
+
+	public static Type adaptType(OrderType orderType) {
+		return orderType == OrderType.BID ? Type.BUY : Type.SELL;
+	}
+
+	public static OrderType adaptOrderType(Type type) {
+		return type == Type.BUY ? OrderType.BID : OrderType.ASK;
+	}
+
+	public static String adaptCurrency(CurrencyPair currencyPair) {
+		return currencyPair.baseSymbol.toLowerCase();
 	}
 
 	public static Ticker adaptTicker(TickerResponse tickerResponse,
@@ -91,8 +107,29 @@ public class CHBTCAdapters {
 		return new AccountInfo(result.getBase().getUsername(), wallets);
 	}
 
-	private static OrderType adaptOrderType(Type type) {
-		return type == Type.BUY ? OrderType.BID : OrderType.ASK;
+	public static String adaptOrderResponse(OrderResponse orderResponse)
+			throws CHBTCClientException {
+		if (orderResponse.getCode() == CHBTCError.SUCCESS) {
+			return String.valueOf(orderResponse.getId());
+		} else {
+			throw new CHBTCClientException(orderResponse);
+		}
+	}
+
+	public static List<LimitOrder> adaptLimitOrders(Order[] orders) {
+		List<LimitOrder> limitOrders = new ArrayList<>(orders.length);
+		for (Order order : orders) {
+			limitOrders.add(adaptLimitOrder(order));
+		}
+		return limitOrders;
+	}
+
+	public static List<Trade> adaptTrades(Order[] orders) {
+		List<Trade> trades = new ArrayList<>(orders.length);
+		for (Order order : orders) {
+			trades.add(adaptTrade(order));
+		}
+		return trades;
 	}
 
 	private static List<LimitOrder> adaptLimitOrders(List<Data> list,
@@ -114,6 +151,20 @@ public class CHBTCAdapters {
 				data.getRate());
 	}
 
+	private static LimitOrder adaptLimitOrder(Order order) {
+		BigDecimal tradableAmount = order.getTotalAmount().subtract(order.getTradeAmount());
+		String currency = order.getCurrency();
+		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
+
+		return new LimitOrder(
+				adaptOrderType(order.getType()),
+				tradableAmount,
+				currencyPair,
+				String.valueOf(order.getId()),
+				order.getTradeDate(),
+				order.getPrice());
+	}
+
 	private static Trade adaptTrade(
 			com.redv.chbtc.domain.Trade trade, CurrencyPair currencyPair) {
 		return new Trade(
@@ -123,6 +174,19 @@ public class CHBTCAdapters {
 				trade.getPrice(),
 				trade.getDate(),
 				trade.getTid());
+	}
+
+	private static Trade adaptTrade(Order order) {
+		String currency = order.getCurrency();
+		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
+		return new Trade(
+				adaptOrderType(order.getType()),
+				order.getTradeAmount(),
+				currencyPair,
+				order.getTradeMoney().divide(order.getTradeAmount()),
+				order.getTradeDate(),
+				null
+				);
 	}
 
 	private static void addBalance(Map<String, Balance> from,
