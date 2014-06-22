@@ -96,7 +96,7 @@ public class CHBTCClient implements AutoCloseable {
 			final int socketTimeout,
 			final int connectTimeout,
 			final int connectionRequestTimeout) {
-		this("https://trade.chbtc.com/api/", accessKey, secretKey,
+		this("https://trade.chbtc.com/api", accessKey, secretKey,
 				socketTimeout, connectTimeout, connectionRequestTimeout);
 	}
 
@@ -459,6 +459,7 @@ public class CHBTCClient implements AutoCloseable {
 		final String sign = EncryDigestUtil.hmacSign(params, secret);
 
 		final String uri = new StringBuilder(tradeApiUrl)
+			.append("/")
 			.append(method)
 			.append("?")
 			.append(params)
