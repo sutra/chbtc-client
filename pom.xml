@@ -11,9 +11,47 @@
 	<name>CHBTC Client</name>
 	<description>
 	<![CDATA[
-	Client for <a href="https://www.chbtc.com">CHBTC</a>.
+	Client for CHBTC(https://www.chbtc.com),
+	with XChange(http://www.xeiam.com/xchange) compatibility.
 	]]>
 	</description>
+
+	<inceptionYear>2013</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The BSD 2-Clause License</name>
+			<url>http://opensource.org/licenses/bsd-license.php</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>sutra</id>
+			<name>Joe Zhou</name>
+			<email>zhoushuqun@gmail.com</email>
+			<url>https://shuqun.com</url>
+			<roles>
+				<role>owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<properties>
+				<legalGivenName>Shuqun</legalGivenName>
+				<legalSurname>Zhou</legalSurname>
+			</properties>
+		</developer>
+		<developer>
+			<id>fangang190</id>
+			<name>Gang Fan</name>
+			<url>https://github.com/fangang190</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
 
 	<prerequisites>
 		<maven>2.2.1</maven>
