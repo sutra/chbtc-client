@@ -11,7 +11,8 @@ import com.xeiam.xchange.NotYetImplementedForExchangeException;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.service.polling.PollingAccountService;
 
-public class CHBTCAccountService extends CHBTCAccountServiceRaw implements PollingAccountService {
+public class CHBTCAccountService extends CHBTCAccountServiceRaw implements
+		PollingAccountService {
 
 	/**
 	 * @param exchangeSpecification

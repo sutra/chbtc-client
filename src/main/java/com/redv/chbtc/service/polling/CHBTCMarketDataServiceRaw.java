@@ -35,10 +35,14 @@ public class CHBTCMarketDataServiceRaw extends CHBTCBasePollingService {
 			throw new RuntimeException(e);
 		}
 		if (exchangeSymbols.contains(CurrencyPair.BTC_CNY)) {
-			chbtcMarketDatas.put(Currencies.BTC, RestProxyFactory.createProxy(CHBTCMarketDataBTC.class, baseUrl));
+			chbtcMarketDatas.put(Currencies.BTC,
+					RestProxyFactory.createProxy(
+							CHBTCMarketDataBTC.class, baseUrl));
 		}
 		if (exchangeSymbols.contains(CurrencyPair.LTC_CNY)) {
-			chbtcMarketDatas.put(Currencies.LTC, RestProxyFactory.createProxy(CHBTCMarketDataLTC.class, baseUrl));
+			chbtcMarketDatas.put(Currencies.LTC,
+					RestProxyFactory.createProxy(
+							CHBTCMarketDataLTC.class, baseUrl));
 		}
 	}
 
