@@ -68,8 +68,10 @@ public class CHBTCClient implements AutoCloseable {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+	@Deprecated
 	private static final DepthReader DEPTH_READER = new DepthReader(OBJECT_MAPPER);
 
+	@Deprecated
 	private static final TypeReference<List<Trade>> TRADE_LIST_TYPE_REFERENCE = new TypeReference<List<Trade>>() {
 	};
 
