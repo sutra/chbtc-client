@@ -225,6 +225,7 @@ public class CHBTCClient implements AutoCloseable {
 	 */
 	@Override
 	public void close() throws IOException {
+		log.debug("Closing HTTP Client...");
 		httpClient.close();
 	}
 

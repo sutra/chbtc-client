@@ -40,4 +40,13 @@ public class CHBTCBaseTradePollingService extends CHBTCBasePollingService {
 				connectionRequestTimeout);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		this.client.close();
+		super.finalize();
+	}
+
 }
