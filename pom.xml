@@ -6,14 +6,53 @@
 
 	<groupId>com.redv</groupId>
 	<artifactId>chbtc-client</artifactId>
-	<version>1.3.2</version>
+	<version>1.4.0</version>
 
 	<name>CHBTC Client</name>
 	<description>
 	<![CDATA[
-	Client for <a href="https://www.chbtc.com">CHBTC</a>.
+	Client for CHBTC(https://www.chbtc.com),
+	with XChange(http://www.xeiam.com/xchange) compatibility.
 	]]>
 	</description>
+
+	<inceptionYear>2013</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The BSD 2-Clause License</name>
+			<url>http://opensource.org/licenses/bsd-license.php</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>sutra</id>
+			<name>Joe Zhou</name>
+			<email>zhoushuqun@gmail.com</email>
+			<url>https://shuqun.com</url>
+			<roles>
+				<role>owner</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+8</timezone>
+			<properties>
+				<legalGivenName>Shuqun</legalGivenName>
+				<legalSurname>Zhou</legalSurname>
+			</properties>
+		</developer>
+		<developer>
+			<id>fangang190</id>
+			<name>Gang Fan</name>
+			<email>fan.gang.cn@gmail.com</email>
+			<url>https://github.com/fangang190</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
 
 	<prerequisites>
 		<maven>2.2.1</maven>
@@ -90,6 +129,11 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.4</version>
 			</plugin>
@@ -151,6 +195,11 @@
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xeiam.xchange</groupId>
+			<artifactId>xchange-core</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
