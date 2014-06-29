@@ -113,6 +113,10 @@ public class CHBTCAdapters {
 		return limitOrders;
 	}
 
+	public static Trades adaptTrades(Order order) {
+		return adaptTrades(new Order[] { order });
+	}
+
 	public static Trades adaptTrades(Order[] orders) {
 		List<Trade> trades = new ArrayList<>(orders.length);
 		for (Order order : orders) {

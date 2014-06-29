@@ -8,6 +8,7 @@ import com.redv.chbtc.CHBTCAdapters;
 import com.redv.chbtc.CHBTCClientException;
 import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Order;
+import com.redv.chbtc.domain.Type;
 import com.xeiam.xchange.ExchangeException;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.NotAvailableFromExchangeException;
@@ -110,34 +111,71 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns trades of one order or all trades of the user's account.
+	 *
+	 * @param arguments
+	 * <ol>
+	 * <li>{@link CurrencyPair}, required, to specified the market.</li>
+	 * <li>order ID, can be null.</li>
+	 * <li>pageIndex, optional, 1 based.</li>
+	 * <li>pageSize, optional.</li>
+	 * <li>type, optional.</li>
+	 * </ol>
 	 */
 	@Override
 	public Trades getTradeHistory(Object... arguments)
 			throws ExchangeException, NotAvailableFromExchangeException,
 			NotYetImplementedForExchangeException, IOException {
-		if (arguments.length < 3) {
+		int argc = arguments.length;
+
+		if (argc < 2) {
 			throw new IllegalArgumentException(
-					"3 arguments required: currency pair, page index(1 based), page size.");
+					"At least 2 arguments are required.");
 		}
+
+		final Trades trades;
 
 		CurrencyPair currencyPair = (CurrencyPair) arguments[0];
-		int pageIndex = (Integer) arguments[1];
-		int pageSize = (Integer) arguments[2];
+		String currency = CHBTCAdapters.adaptCurrency(currencyPair);
+		Long orderId = argc > 1 ? (Long) arguments[1] : null;
+		Integer pageIndex = argc > 2 ? (Integer) arguments[2] : null;
+		Integer pageSize = argc > 3 ? (Integer) arguments[3] : null;
+		Type type = argc > 4 ? (Type) arguments[4] : null;
 
-		if (pageSize > MAXIMUM_PAGE_SIZE) {
-			throw new IllegalArgumentException(
-					String.format("Page size %1$d is greater than maximum page size %2$d.",
-							pageSize,
-							MAXIMUM_PAGE_SIZE));
+		if (orderId != null) {
+			Order order = getOrder(orderId.longValue(), currency);
+			trades = CHBTCAdapters.adaptTrades(order);
+		} else if (pageIndex != null && pageSize != null && type != null) {
+			checkPageSize(pageSize);
+
+			Order[] orders = getOrdersNew(type, currency, pageIndex, pageSize);
+			trades = CHBTCAdapters.adaptTrades(orders);
+		} else if (pageIndex != null && pageSize != null){
+			checkPageSize(pageSize);
+
+			Order[] orders = getOrdersIgnoreTradeType(
+					currency,
+					pageIndex,
+					pageSize);
+
+			trades = CHBTCAdapters.adaptTrades(orders);
+		} else if (pageIndex != null && type != null) {
+			Order[] orders = getOrders(type, currency, pageIndex);
+			trades = CHBTCAdapters.adaptTrades(orders);
+		} else {
+			throw new IllegalArgumentException();
 		}
 
-		Order[] orders = getOrdersIgnoreTradeType(
-				CHBTCAdapters.adaptCurrency(currencyPair),
-				pageIndex,
-				pageSize);
+		return trades;
+	}
 
-		return CHBTCAdapters.adaptTrades(orders);
+	private void checkPageSize(int pageSize) {
+		if (pageSize > MAXIMUM_PAGE_SIZE) {
+			throw new IllegalArgumentException(
+				String.format("Page size %1$d is greater than maximum page size %2$d.",
+					pageSize,
+					MAXIMUM_PAGE_SIZE));
+		}
 	}
 
 }
