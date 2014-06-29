@@ -33,8 +33,8 @@ public class ErrorableJsonValueTypeRefReader<T> extends JsonValueTypeRefReader<T
 	public T read(final InputStream inputStream) throws IOException {
 		String content = IOUtils.toString(inputStream);
 
-		if (log.isDebugEnabled()) {
-			log.debug("content: {}", content);
+		if (log.isTraceEnabled()) {
+			log.trace("content: {}", content);
 		}
 
 		try {

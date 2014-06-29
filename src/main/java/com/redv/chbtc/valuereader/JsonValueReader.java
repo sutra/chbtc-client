@@ -35,7 +35,7 @@ public class JsonValueReader<T> implements ValueReader<T> {
 	}
 
 	protected T read(String content) throws IOException {
-		log.debug("Reading {} from \"{}\".", valueType, content);
+		log.trace("Reading {} from \"{}\".", valueType, content);
 
 		try (InputStream in = IOUtils.toInputStream(content, ENCODING)) {
 			return objectMapper.readValue(in, valueType);
