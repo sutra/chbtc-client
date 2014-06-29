@@ -168,11 +168,14 @@ public class CHBTCAdapters {
 	private static Trade adaptTrade(Order order) {
 		String currency = order.getCurrency();
 		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
+		BigDecimal price = order.getTradeAmount().compareTo(BigDecimal.ZERO) > 0
+				? order.getTradeMoney().divide(order.getTradeAmount())
+						: BigDecimal.ZERO;
 		return new Trade(
 				adaptOrderType(order.getType()),
 				order.getTradeAmount(),
 				currencyPair,
-				order.getTradeMoney().divide(order.getTradeAmount()),
+				price,
 				order.getTradeDate(),
 				null
 				);
