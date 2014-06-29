@@ -32,6 +32,14 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 		return client.getOrder(id, currency);
 	}
 
+	/**
+	 * 
+	 * @param tradeType
+	 * @param currency
+	 * @param pageIndex 1 based.
+	 * @return
+	 * @throws IOException
+	 */
 	public Order[] getOrders(Type tradeType, String currency, int pageIndex)
 			throws IOException {
 		List<Order> orderList = client.getOrders(tradeType, currency, pageIndex);
@@ -45,6 +53,14 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 		return orderList.toArray(ORDER_ARRAY);
 	}
 
+	/**
+	 * 
+	 * @param currency
+	 * @param pageIndex 1 based.
+	 * @param pageSize
+	 * @return
+	 * @throws IOException
+	 */
 	public Order[] getOrdersIgnoreTradeType(String currency, int pageIndex,
 			int pageSize) throws IOException {
 		List<Order> orderList = client.getOrdersIgnoreTradeType(
@@ -52,6 +68,14 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 		return orderList.toArray(ORDER_ARRAY);
 	}
 
+	/**
+	 * 
+	 * @param currency
+	 * @param pageIndex 1 based.
+	 * @param pageSize
+	 * @return
+	 * @throws IOException
+	 */
 	public Order[] getUnfinishedOrdersIgnoreTradeType(String currency,
 			int pageIndex, int pageSize) throws IOException {
 		List<Order> orderList = client.getUnfinishedOrdersIgnoreTradeType(

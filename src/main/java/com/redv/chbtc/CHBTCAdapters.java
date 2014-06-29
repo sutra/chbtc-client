@@ -113,12 +113,12 @@ public class CHBTCAdapters {
 		return limitOrders;
 	}
 
-	public static List<Trade> adaptTrades(Order[] orders) {
+	public static Trades adaptTrades(Order[] orders) {
 		List<Trade> trades = new ArrayList<>(orders.length);
 		for (Order order : orders) {
 			trades.add(adaptTrade(order));
 		}
-		return trades;
+		return new Trades(trades, TradeSortType.SortByTimestamp);
 	}
 
 	private static List<LimitOrder> adaptLimitOrders(List<Data> list,
@@ -177,7 +177,8 @@ public class CHBTCAdapters {
 				currencyPair,
 				price,
 				order.getTradeDate(),
-				null
+				null,
+				String.valueOf(order.getId())
 				);
 	}
 

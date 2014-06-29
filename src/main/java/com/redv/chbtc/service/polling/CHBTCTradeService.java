@@ -14,7 +14,6 @@ import com.xeiam.xchange.NotAvailableFromExchangeException;
 import com.xeiam.xchange.NotYetImplementedForExchangeException;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.marketdata.Trades;
-import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.MarketOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
@@ -119,7 +118,7 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 			NotYetImplementedForExchangeException, IOException {
 		if (arguments.length < 3) {
 			throw new IllegalArgumentException(
-					"3 arguments required: currency pair, page index, page size.");
+					"3 arguments required: currency pair, page index(1 based), page size.");
 		}
 
 		CurrencyPair currencyPair = (CurrencyPair) arguments[0];
@@ -138,7 +137,7 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 				pageIndex,
 				pageSize);
 
-		return new Trades(CHBTCAdapters.adaptTrades(orders), TradeSortType.SortByTimestamp);
+		return CHBTCAdapters.adaptTrades(orders);
 	}
 
 }
