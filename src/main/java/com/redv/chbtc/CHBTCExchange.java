@@ -49,6 +49,12 @@ public class CHBTCExchange extends BaseExchange {
 		exchangeSpecification.setExchangeSpecificParametersItem(
 				SYMBOLS_PARAMETER, SYMBOLS);
 		exchangeSpecification.setExchangeSpecificParametersItem(
+				SOCKET_TIMEOUT_PARAMETER, 0);
+		exchangeSpecification.setExchangeSpecificParametersItem(
+				CONNECT_TIMEOUT_PARAMETER, 0);
+		exchangeSpecification.setExchangeSpecificParametersItem(
+				CONNECTION_REQUEST_TIMEOUT_PARAMETER, 0);
+		exchangeSpecification.setExchangeSpecificParametersItem(
 				PRICE_SCALE_PARAMETER, 8);
 		return exchangeSpecification;
 	}
