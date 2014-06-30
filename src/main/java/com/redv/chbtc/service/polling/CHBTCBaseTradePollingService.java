@@ -19,20 +19,21 @@ public class CHBTCBaseTradePollingService extends CHBTCBasePollingService {
 		final String accessKey = exchangeSpecification.getApiKey();
 		final String secretKey = exchangeSpecification.getSecretKey();
 
-		final int socketTimeout = (Integer) exchangeSpecification
+		final Integer socketTimeout = (Integer) exchangeSpecification
 				.getParameter(CHBTCExchange.SOCKET_TIMEOUT_PARAMETER);
-		final int connectTimeout = (Integer) exchangeSpecification
+		final Integer connectTimeout = (Integer) exchangeSpecification
 				.getParameter(CHBTCExchange.CONNECT_TIMEOUT_PARAMETER);
-		final int connectionRequestTimeout = (Integer) exchangeSpecification
+		final Integer connectionRequestTimeout = (Integer) exchangeSpecification
 				.getParameter(CHBTCExchange.CONNECTION_REQUEST_TIMEOUT_PARAMETER);
 
 		client = new CHBTCClient(
 				tradeApiUrl,
 				accessKey,
 				secretKey,
-				socketTimeout,
-				connectTimeout,
-				connectionRequestTimeout);
+				socketTimeout == null ? 0 : socketTimeout.intValue(),
+				connectTimeout == null ? 0 : connectTimeout.intValue(),
+				connectionRequestTimeout == null ? 0
+						: connectionRequestTimeout.intValue());
 	}
 
 	/**
