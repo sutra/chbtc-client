@@ -33,8 +33,9 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 	 */
 	public CHBTCTradeService(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);
-		this.priceScale = (Integer) exchangeSpecification.getParameter(
+		Integer priceScale = (Integer) exchangeSpecification.getParameter(
 				CHBTCExchange.PRICE_SCALE_PARAMETER);
+		this.priceScale = priceScale != null ? priceScale.intValue() : 8;
 	}
 
 	/**
