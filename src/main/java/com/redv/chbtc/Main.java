@@ -71,7 +71,7 @@ public class Main {
 		log.info("Open orders({}): {}", openOrders.getOpenOrders().size(), openOrders);
 
 		// Trade history
-		Trades tradeHistory = tradeSerivce.getTradeHistory(CurrencyPair.BTC_CNY, 0, 1);
+		Trades tradeHistory = tradeSerivce.getTradeHistory(CurrencyPair.BTC_CNY, null, 1, 1);
 		log.info("Trade history({}): {}", tradeHistory.getTrades().size(), tradeHistory);
 
 		try (CHBTCClient client = new CHBTCClient(accessKey, secretKey, 5000, 5000, 5000)) {

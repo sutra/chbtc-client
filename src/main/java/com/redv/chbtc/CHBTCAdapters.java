@@ -1,6 +1,7 @@
 package com.redv.chbtc;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -113,14 +114,14 @@ public class CHBTCAdapters {
 		return limitOrders;
 	}
 
-	public static Trades adaptTrades(Order order) {
-		return adaptTrades(new Order[] { order });
+	public static Trades adaptTrades(Order order, int priceScale) {
+		return adaptTrades(new Order[] { order }, priceScale);
 	}
 
-	public static Trades adaptTrades(Order[] orders) {
+	public static Trades adaptTrades(Order[] orders, int priceScale) {
 		List<Trade> trades = new ArrayList<>(orders.length);
 		for (Order order : orders) {
-			trades.add(adaptTrade(order));
+			trades.add(adaptTrade(order, priceScale));
 		}
 		return new Trades(trades, TradeSortType.SortByTimestamp);
 	}
@@ -169,12 +170,15 @@ public class CHBTCAdapters {
 				trade.getTid());
 	}
 
-	private static Trade adaptTrade(Order order) {
+	private static Trade adaptTrade(Order order, int priceScale) {
 		String currency = order.getCurrency();
 		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
 		BigDecimal price = order.getTradeAmount().compareTo(BigDecimal.ZERO) > 0
-				? order.getTradeMoney().divide(order.getTradeAmount())
-						: BigDecimal.ZERO;
+				? order.getTradeMoney().divide(
+						order.getTradeAmount(),
+						priceScale,
+						RoundingMode.HALF_EVEN)
+				: BigDecimal.ZERO;
 		return new Trade(
 				adaptOrderType(order.getType()),
 				order.getTradeAmount(),

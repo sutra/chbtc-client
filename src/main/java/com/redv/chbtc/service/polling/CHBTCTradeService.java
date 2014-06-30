@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.redv.chbtc.CHBTCAdapters;
 import com.redv.chbtc.CHBTCClientException;
+import com.redv.chbtc.CHBTCExchange;
 import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Type;
@@ -25,11 +26,15 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 
 	private static final int MAXIMUM_PAGE_SIZE = 100;
 
+	private final int priceScale;
+
 	/**
 	 * @param exchangeSpecification
 	 */
 	public CHBTCTradeService(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);
+		this.priceScale = (Integer) exchangeSpecification.getParameter(
+				CHBTCExchange.PRICE_SCALE_PARAMETER);
 	}
 
 	/**
@@ -144,12 +149,12 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 
 		if (orderId != null) {
 			Order order = getOrder(orderId.longValue(), currency);
-			trades = CHBTCAdapters.adaptTrades(order);
+			trades = CHBTCAdapters.adaptTrades(order, priceScale);
 		} else if (pageIndex != null && pageSize != null && type != null) {
 			checkPageSize(pageSize);
 
 			Order[] orders = getOrdersNew(type, currency, pageIndex, pageSize);
-			trades = CHBTCAdapters.adaptTrades(orders);
+			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
 		} else if (pageIndex != null && pageSize != null){
 			checkPageSize(pageSize);
 
@@ -158,10 +163,10 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 					pageIndex,
 					pageSize);
 
-			trades = CHBTCAdapters.adaptTrades(orders);
+			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
 		} else if (pageIndex != null && type != null) {
 			Order[] orders = getOrders(type, currency, pageIndex);
-			trades = CHBTCAdapters.adaptTrades(orders);
+			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
 		} else {
 			throw new IllegalArgumentException();
 		}
