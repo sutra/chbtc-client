@@ -3,6 +3,7 @@ package com.redv.chbtc;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,14 @@ public class CHBTCAdapters {
 
 	public static Type adaptType(OrderType orderType) {
 		return orderType == OrderType.BID ? Type.BUY : Type.SELL;
+	}
+
+	public static OrderType adaptOrderType(int type) {
+		return adaptOrderType(Type.toType(type));
+	}
+
+	public static OrderType adaptOrderType(String type) {
+		return adaptOrderType(Type.toType(type));
 	}
 
 	public static OrderType adaptOrderType(Type type) {
@@ -155,7 +164,7 @@ public class CHBTCAdapters {
 				tradableAmount,
 				currencyPair,
 				String.valueOf(order.getId()),
-				order.getTradeDate(),
+				new Date(order.getTradeDate()),
 				order.getPrice());
 	}
 
@@ -166,7 +175,7 @@ public class CHBTCAdapters {
 				trade.getAmount(),
 				currencyPair,
 				trade.getPrice(),
-				trade.getDate(),
+				new Date(Long.parseLong(trade.getDate()) * 1000),
 				trade.getTid());
 	}
 
@@ -184,7 +193,7 @@ public class CHBTCAdapters {
 				order.getTradeAmount(),
 				currencyPair,
 				price,
-				order.getTradeDate(),
+				new Date(order.getTradeDate()),
 				null,
 				String.valueOf(order.getId())
 				);

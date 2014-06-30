@@ -1,16 +1,14 @@
 package com.redv.chbtc.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TickerResponse extends AbstractObject {
 
-	private static final long serialVersionUID = 2013112501L;
+	private static final long serialVersionUID = 2014063001L;
 
-	private Ticker ticker;
+	private final Ticker ticker;
 
-	public TickerResponse() {
-
-	}
-
-	public TickerResponse(Ticker ticker) {
+	public TickerResponse(@JsonProperty("ticker") final Ticker ticker) {
 		this.ticker = ticker;
 	}
 

@@ -1,5 +1,7 @@
 package com.redv.chbtc.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CHBTCError extends AbstractObject {
 
 	public static final int SUCCESS = 1000;
@@ -35,11 +37,18 @@ public class CHBTCError extends AbstractObject {
 
 	public static final int REQUEST_TOO_FREQUENTLY = 4002;
 
-	private static final long serialVersionUID = 2014033001L;
+	private static final long serialVersionUID = 2014063001L;
 
-	private int code;
+	private final int code;
 
-	private String message;
+	private final String message;
+
+	public CHBTCError(
+			@JsonProperty("code") final int code,
+			@JsonProperty("message") final String message) {
+		this.code = code;
+		this.message = message;
+	}
 
 	public int getCode() {
 		return code;

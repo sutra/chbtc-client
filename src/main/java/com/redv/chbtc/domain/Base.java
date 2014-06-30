@@ -7,30 +7,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Base extends AbstractObject {
 
-	private static final long serialVersionUID = 2014033001L;
+	private static final long serialVersionUID = 2014063001L;
 
 	/**
 	 * 用户名称。
 	 */
-	private String username;
+	private final String username;
 
 	/**
 	 * 是否开启安全密码。
 	 */
-	@JsonProperty("trade_password_enabled")
-	private boolean tradePasswordEnabled;
+	private final boolean tradePasswordEnabled;
 
 	/**
 	 * 是否启用手机认证。
 	 */
-	@JsonProperty("auth_mobile_enabled")
-	private boolean authMobileEnabled;
+	private final boolean authMobileEnabled;
 
 	/**
 	 * 是否启用谷歌认证。
 	 */
-	@JsonProperty("auth_google_enabled")
-	private boolean authGoogleEnabled;
+	
+	private final boolean authGoogleEnabled;
+
+	public Base(
+			@JsonProperty("username") final String username,
+			@JsonProperty("trade_password_enabled") final boolean tradePasswordEnabled,
+			@JsonProperty("auth_mobile_enabled") final boolean authMobileEnabled,
+			@JsonProperty("auth_google_enabled") final boolean authGoogleEnabled) {
+		this.username = username;
+		this.tradePasswordEnabled = tradePasswordEnabled;
+		this.authMobileEnabled = authMobileEnabled;
+		this.authGoogleEnabled = authGoogleEnabled;
+	}
 
 	public String getUsername() {
 		return username;

@@ -1,27 +1,35 @@
 package com.redv.chbtc.domain;
 
 import java.math.BigDecimal;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trade extends AbstractObject {
 
-	private static final long serialVersionUID = 2013112501L;
+	private static final long serialVersionUID = 2014063001L;
 
-	private Date date;
+	/**
+	 * Unix time, in seconds.
+	 */
+	private final String date;
 
-	private BigDecimal price;
+	private final BigDecimal price;
 
-	private BigDecimal amount;
+	private final BigDecimal amount;
 
-	private String tid;
+	private final String tid;
 
-	private Type type;
+	/**
+	 * buy/sell
+	 */
+	private final String type;
 
-	public Trade() {
-	}
-
-	public Trade(Date date, BigDecimal price, BigDecimal amount, String tid,
-			Type type) {
+	public Trade(
+			@JsonProperty("date") final String date,
+			@JsonProperty("price") final BigDecimal price,
+			@JsonProperty("amount") final BigDecimal amount,
+			@JsonProperty("tid") String tid,
+			@JsonProperty("type") String type) {
 		this.date = date;
 		this.price = price;
 		this.amount = amount;
@@ -29,7 +37,7 @@ public class Trade extends AbstractObject {
 		this.type = type;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
@@ -45,16 +53,8 @@ public class Trade extends AbstractObject {
 		return tid;
 	}
 
-	public Type getType() {
+	public String getType() {
 		return type;
-	}
-
-	public void setDate(long date) {
-		this.date = new Date(date * 1000);
-	}
-
-	public void setType(String type) {
-		this.type = Type.toType(type);
 	}
 
 }
