@@ -12,7 +12,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.redv.chbtc.domain.Balance;
 import com.redv.chbtc.domain.Depth;
-import com.redv.chbtc.domain.Depth.Data;
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Result;
 import com.redv.chbtc.domain.TickerResponse;
@@ -78,8 +77,8 @@ public class CHBTCAdapters {
 	public static OrderBook adaptOrderBook(Depth depth, CurrencyPair currencyPair) {
 		return new OrderBook(
 				null,
-				adaptLimitOrders(depth.getAsks(), currencyPair),
-				adaptLimitOrders(depth.getBids(), currencyPair));
+				adaptLimitOrders(OrderType.ASK, depth.getAsks(), currencyPair),
+				adaptLimitOrders(OrderType.BID, depth.getBids(), currencyPair));
 	}
 
 	public static Trades adaptTrades(com.redv.chbtc.domain.Trade[] trades,
@@ -135,23 +134,28 @@ public class CHBTCAdapters {
 		return new Trades(trades, TradeSortType.SortByTimestamp);
 	}
 
-	private static List<LimitOrder> adaptLimitOrders(List<Data> list,
+	private static List<LimitOrder> adaptLimitOrders(
+			OrderType type,
+			BigDecimal[][] list,
 			CurrencyPair currencyPair) {
-		List<LimitOrder> limitOrders = new ArrayList<>(list.size());
-		for (Data data : list) {
-			limitOrders.add(adaptLimitOrder(data, currencyPair));
+		List<LimitOrder> limitOrders = new ArrayList<>(list.length);
+		for (BigDecimal[] data : list) {
+			limitOrders.add(adaptLimitOrder(type, data, currencyPair));
 		}
 		return limitOrders;
 	}
 
-	private static LimitOrder adaptLimitOrder(Data data,
+	private static LimitOrder adaptLimitOrder(
+			OrderType type,
+			BigDecimal[] data,
 			CurrencyPair currencyPair) {
-		return new LimitOrder(adaptOrderType(data.getType()),
-				data.getAmount(),
+		return new LimitOrder(
+				type,
+				data[1],
 				currencyPair,
 				null,
 				null,
-				data.getRate());
+				data[0]);
 	}
 
 	private static LimitOrder adaptLimitOrder(Order order) {

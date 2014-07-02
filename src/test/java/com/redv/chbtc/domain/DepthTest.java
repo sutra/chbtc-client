@@ -1,66 +1,31 @@
 package com.redv.chbtc.domain;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import com.redv.chbtc.domain.Depth.Data;
-
-public class DepthTest {
+public class DepthTest extends UnmarshalTest {
 
 	@Test
-	public void testSort0() {
-		Depth depth = new Depth();
+	public void testUnmarshal() throws IOException {
+		Depth depth = readValue("depth.json", Depth.class);
 
-		depth.setBids(new BigDecimal[][] {
-				{ new BigDecimal(1), new BigDecimal(1) },
-				{ new BigDecimal(2), new BigDecimal(1) } });
-		depth.setAsks(new BigDecimal[][] {
-				{ new BigDecimal(1), new BigDecimal(1) },
-				{ new BigDecimal(2), new BigDecimal(1) } });
+		// asks
+		assertEquals(new BigDecimal("5356.00"), depth.getAsks()[0][0]);
+		assertEquals(new BigDecimal("0.1000"), depth.getAsks()[0][1]);
 
-		assertEquals(new BigDecimal(2), depth.getBids().get(0).getRate());
-		assertEquals(new BigDecimal(1), depth.getAsks().get(0).getRate());
-	}
+		assertEquals(new BigDecimal("5355.00"), depth.getAsks()[1][0]);
+		assertEquals(new BigDecimal("0.5290"), depth.getAsks()[1][1]);
 
-	@Test
-	public void testSort1() {
-		Depth depth = new Depth();
+		// bids
+		assertEquals(new BigDecimal("5248.00"), depth.getBids()[0][0]);
+		assertEquals(new BigDecimal("0.0010"), depth.getBids()[0][1]);
 
-		depth.setBids(new BigDecimal[][] {
-				{ new BigDecimal(2), new BigDecimal(1) },
-				{ new BigDecimal(1), new BigDecimal(1) } });
-		depth.setAsks(new BigDecimal[][] {
-				{ new BigDecimal(2), new BigDecimal(1) },
-				{ new BigDecimal(1), new BigDecimal(1) } });
-
-		assertEquals(new BigDecimal(2), depth.getBids().get(0).getRate());
-		assertEquals(new BigDecimal(1), depth.getAsks().get(0).getRate());
-	}
-
-	@Test
-	public void testDataCompare() {
-		Data bid0 = new Data(Type.BUY, new BigDecimal(2), new BigDecimal(1));
-		Data bid1 = new Data(Type.BUY, new BigDecimal(2), new BigDecimal(1));
-
-		assertTrue(bid0.compareTo(bid1) == 0);
-
-		bid0 = new Data(Type.BUY, new BigDecimal(2), new BigDecimal(1));
-		bid1 = new Data(Type.BUY, new BigDecimal(1), new BigDecimal(1));
-
-		assertTrue(bid0.compareTo(bid1) < 0);
-
-		Data ask0 = new Data(Type.SELL, new BigDecimal(2), new BigDecimal(1));
-		Data ask1 = new Data(Type.SELL, new BigDecimal(2), new BigDecimal(1));
-
-		assertTrue(ask0.compareTo(ask1) == 0);
-
-		ask0 = new Data(Type.SELL, new BigDecimal(1), new BigDecimal(1));
-		ask1 = new Data(Type.SELL, new BigDecimal(2), new BigDecimal(1));
-
-		assertTrue(ask0.compareTo(ask1) < 0);
+		assertEquals(new BigDecimal("5240.00"), depth.getBids()[1][0]);
+		assertEquals(new BigDecimal("0.0100"), depth.getBids()[1][1]);
 	}
 
 }
