@@ -1,5 +1,7 @@
 package com.redv.chbtc;
 
+import java.io.IOException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -38,7 +40,8 @@ public interface CHBTC {
 			@QueryParam("tradeType") int tradeType,
 			@QueryParam("currency") String currency,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated Use {@link CHBTCClient#cancelOrder(long, String)} instead.
@@ -52,7 +55,8 @@ public interface CHBTC {
 			@QueryParam("id") long id,
 			@QueryParam("currency") String currency,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated Use {@link CHBTCClient#getOrder(long, String)} instead.
@@ -66,7 +70,8 @@ public interface CHBTC {
 			@QueryParam("id") long id,
 			@QueryParam("currency") String currency,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated The response JSON maybe array
@@ -82,7 +87,8 @@ public interface CHBTC {
 			@QueryParam("currency") String currency,
 			@QueryParam("pageIndex") int pageIndex,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated The response JSON maybe array
@@ -99,7 +105,8 @@ public interface CHBTC {
 			@QueryParam("pageIndex") int pageIndex,
 			@QueryParam("pageSize") int pageSize,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated The response JSON may be array
@@ -115,7 +122,8 @@ public interface CHBTC {
 			@QueryParam("pageIndex") int pageIndex,
 			@QueryParam("pageSize") int pageSize,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated The response JSON maybe array
@@ -131,7 +139,8 @@ public interface CHBTC {
 			@QueryParam("pageIndex") int pageIndex,
 			@QueryParam("pageSize") int pageSize,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 	/**
 	 * @deprecated Use {@link CHBTCClient#getAccountInfo()} instead.
@@ -143,6 +152,7 @@ public interface CHBTC {
 			@QueryParam("method") String method,
 			@QueryParam("accesskey") String accessKey,
 			@QueryParam("sign") String sign,
-			@QueryParam("reqTime") long reqTime);
+			@QueryParam("reqTime") long reqTime)
+					throws IOException;
 
 }

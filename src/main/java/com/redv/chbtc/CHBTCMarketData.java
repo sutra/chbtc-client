@@ -1,5 +1,7 @@
 package com.redv.chbtc;
 
+import java.io.IOException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -12,18 +14,18 @@ public interface CHBTCMarketData {
 
 	@GET
 	@Path("ticker")
-	TickerResponse getTicker();
+	TickerResponse getTicker() throws IOException;
 
 	@GET
 	@Path("depth")
-	Depth getDepth();
+	Depth getDepth() throws IOException;
 
 	@GET
 	@Path("trades")
-	Trade[] getTrades();
+	Trade[] getTrades() throws IOException;
 
 	@GET
 	@Path("trades")
-	Trade[] getTrades(@QueryParam("since") long since);
+	Trade[] getTrades(@QueryParam("since") long since) throws IOException;
 
 }
