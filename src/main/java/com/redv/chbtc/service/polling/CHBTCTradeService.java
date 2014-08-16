@@ -29,7 +29,7 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 	private final int priceScale;
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	public CHBTCTradeService(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);

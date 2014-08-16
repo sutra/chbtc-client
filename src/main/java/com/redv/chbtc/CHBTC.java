@@ -27,6 +27,18 @@ public interface CHBTC {
 	static final String METHOD_GET_ACCOUNT_INFO = "getAccountInfo";
 
 	/**
+	 * Places a buy or sell order.
+	 *
+	 * @param method order.
+	 * @param accessKey the access key.
+	 * @param price the order price.
+	 * @param amount the quantity of the order.
+	 * @param tradeType the trade type, 1 means buy, 0 means sell.
+	 * @param currency the tradable currency, could be BTC, LTC.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of request, in milliseconds.
+	 * @return the response of placing order, contains order ID.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCClient#order(java.math.BigDecimal, java.math.BigDecimal, com.redv.chbtc.domain.Type, String)} instead.
 	 */
 	@Deprecated
@@ -44,6 +56,16 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Cancels an order.
+	 *
+	 * @param method cancelOrder.
+	 * @param accessKey the access key.
+	 * @param id the ID of the order to be cancelled.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return the cancellation result.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCClient#cancelOrder(long, String)} instead.
 	 */
 	@Deprecated
@@ -59,6 +81,16 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets order detail.
+	 *
+	 * @param method getOrder.
+	 * @param accessKey the access key.
+	 * @param id the order ID.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the reuqest, in milliseconds.
+	 * @return the order detail.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCClient#getOrder(long, String)} instead.
 	 */
 	@Deprecated
@@ -74,6 +106,17 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets orders, the page size is always 10.
+	 *
+	 * @param method getOrders.
+	 * @param accessKey the access key.
+	 * @param tradeType the trade type, 1 means buy, 0 means sell.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param pageIndex the page index, 1 based.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return order details.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated The response JSON maybe array
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
@@ -91,6 +134,18 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets orders, the page size can be specified.
+	 *
+	 * @param method getOrdersNew.
+	 * @param accessKey the access key.
+	 * @param tradeType the trade type, 1 means buy, 0 means sell.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param pageIndex the page index, 1 based.
+	 * @param pageSize the page size, should be less than or equals to 100.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return the orders.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated The response JSON maybe array
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
@@ -109,6 +164,17 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets the orders, contains buy and sell order.
+	 *
+	 * @param method getOrdersIgnoreTradeType.
+	 * @param accessKey the access key.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param pageIndex the page index, 1 based.
+	 * @param pageSize the page size.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return the orders.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated The response JSON may be array
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
@@ -126,6 +192,17 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets open orders, contains buy and sell orders.
+	 *
+	 * @param method getUnfinishedOrdersIgnoreTradeType.
+	 * @param accessKey the access key.
+	 * @param currency the currency of the tradable, could be BTC or LTC.
+	 * @param pageIndex the page index, 1 based.
+	 * @param pageSize the page size, should be less than or equals to 100.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return the open orders.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated The response JSON maybe array
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
@@ -143,6 +220,14 @@ public interface CHBTC {
 					throws IOException;
 
 	/**
+	 * Gets account information.
+	 *
+ 	 * @param method getAccountInfo.
+	 * @param accessKey the access key.
+	 * @param sign the MD5 signature.
+	 * @param reqTime the time stamp of the request, in milliseconds.
+	 * @return the account information.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCClient#getAccountInfo()} instead.
 	 */
 	@Deprecated

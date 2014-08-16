@@ -26,10 +26,11 @@ public class Balance extends AbstractObject {
 	private final BigDecimal amount;
 
 	/**
-	 * 
-	 * @param currency
+	 * Constructor.
+	 *
+	 * @param currency the currency symbol.
 	 * @param symbol the URL encoded currency symbol.
-	 * @param amount
+	 * @param amount the amount of the currency.
 	 */
 	public Balance(
 			@JsonProperty("currency") final String currency,

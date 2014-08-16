@@ -22,7 +22,7 @@ public class CHBTCMarketDataServiceRaw extends CHBTCBasePollingService {
 	private final Map<String, CHBTCMarketData> chbtcMarketDatas = new HashMap<>(2);
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	protected CHBTCMarketDataServiceRaw(
 			ExchangeSpecification exchangeSpecification) {

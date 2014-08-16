@@ -121,6 +121,10 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets BTC ticker.
+	 *
+	 * @return the ticker of the BTC market.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTicker(CurrencyPair)} instead.
 	 */
 	@Deprecated
@@ -129,6 +133,11 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets ticker of the specified market.
+	 * 
+	 * @param currency the currency symbol of the tradable, could be BTC or LTC.
+	 * @return the ticker.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTicker(CurrencyPair)} instead.
 	 */
 	@Deprecated
@@ -142,6 +151,10 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets BTC market order book.
+	 *
+	 * @return the order book of BTC market.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getOrderBook(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -150,6 +163,11 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets order book of the specified market.
+	 *
+	 * @param currency the currency symbol of the tradable, could be BTC or LTC.
+	 * @return the order book of the specified market.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getOrderBook(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -162,6 +180,10 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets trades of BTC market.
+	 *
+	 * @return the trades of BTC market.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -170,6 +192,11 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets trades of BTC market.
+	 *
+	 * @param since 1 based. When pass 1, will get trades from the first trade of CHBTC.
+	 * @return the trades in BTC market.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -187,6 +214,11 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets recent trades of the specified market.
+	 *
+	 * @param currency the currency symbol of the tradable, could be BTC or LTC.
+	 * @return the trades.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -199,6 +231,12 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
+	 * Gets trades.
+	 *
+	 * @param currency the currency symbol of the tradable, could be BTC or LTC.
+	 * @param since 1 based. When pass 1, will get trades from the first trade of CHBTC.
+	 * @return trades.
+	 * @throws IOException indicates I/O exception.
 	 * @deprecated Use {@link CHBTCMarketDataService#getTrades(CurrencyPair, Object...)} instead.
 	 */
 	@Deprecated
@@ -239,7 +277,7 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param tradeType 交易类型 1/0[buy/sell]
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @return 挂单 ID。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public long order(
 			final BigDecimal price,
@@ -267,7 +305,7 @@ public class CHBTCClient implements AutoCloseable {
 	 *
 	 * @param id 挂单 ID。
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public void cancelOrder(
 			final long id,
@@ -290,7 +328,7 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param id 挂单 ID。
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @return 委托买单或卖单。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public Order getOrder(
 			final long id,
@@ -310,7 +348,7 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @param pageIndex 当前页数。
 	 * @return 多个委托买单或卖单，最多 10 条记录。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public List<Order> getOrders(
 			final Type tradeType,
@@ -327,14 +365,14 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
-	 * 获取多个委托买单或卖单，每次请求返回 pageSize<=100 条记录。
+	 * 获取多个委托买单或卖单，每次请求返回 {@literal pageSize<=100} 条记录。
 	 *
 	 * @param tradeType 交易类型 1/0[buy/sell]。
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @param pageIndex 当前页数。
 	 * @param pageSize 每页数量。
 	 * @return 多个委托买单或卖单。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public List<Order> getOrdersNew(
 			final Type tradeType,
@@ -358,8 +396,8 @@ public class CHBTCClient implements AutoCloseable {
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @param pageIndex 当前页数。
 	 * @param pageSize 每页数量。
-	 * @return
-	 * @throws IOException
+	 * @return 多个委托买单和卖单。
+	 * @throws IOException indicates I/O exception.
 	 */
 	public List<Order> getOrdersIgnoreTradeType(
 			final String currency,
@@ -375,13 +413,13 @@ public class CHBTCClient implements AutoCloseable {
 	}
 
 	/**
-	 * 获取未成交或部份成交的买单和卖单，每次请求返回 pageSize<=100 条记录。
+	 * 获取未成交或部份成交的买单和卖单，每次请求返回 {@literal pageSize<=100} 条记录。
 	 *
 	 * @param currency 交易类型(目前仅支持 BTC/LTC)。
 	 * @param pageIndex 当前页数。
 	 * @param pageSize 每页数量。
 	 * @return 未成交或部份成交的买单和卖单。
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public List<Order> getUnfinishedOrdersIgnoreTradeType(
 			final String currency,
@@ -402,6 +440,8 @@ public class CHBTCClient implements AutoCloseable {
 
 	/**
 	 * 获取用户信息。
+	 * @return 用户信息。
+	 * @throws IOException indicates I/O exception.
 	 */
 	public AccountInfo getAccountInfo() throws IOException {
 		return get(CHBTC.METHOD_GET_ACCOUNT_INFO, AccountInfo.class);

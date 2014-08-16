@@ -13,7 +13,7 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 	private static final Order[] ORDER_ARRAY = new Order[] {};
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	protected CHBTCTradeServiceRaw(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);
@@ -54,7 +54,7 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 	 * @param currency the base symbol in lower case to specify market.
 	 * e.g. btc, ltc.
 	 * @return the order with given order ID in the specified market.
-	 * @throws IOException
+	 * @throws IOException indicates I/O exception.
 	 */
 	public Order getOrder(long id, String currency) throws IOException {
 		return client.getOrder(id, currency);

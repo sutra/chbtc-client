@@ -19,10 +19,6 @@ public class CHBTCAdaptersTest {
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
-	/**
-	 * Test method for {@link com.redv.chbtc.CHBTCAdapters#adaptTrades(com.redv.chbtc.domain.Order)}.
-	 * @throws IOException 
-	 */
 	@Test
 	public void testAdaptTradesOrder() throws IOException {
 		Order order = mapper.readValue(getClass().getResource("domain/order.json"), Order.class);
@@ -42,7 +38,7 @@ public class CHBTCAdaptersTest {
 		BigDecimal result = new BigDecimal("52").divide(
 				new BigDecimal("0.019"), RoundingMode.HALF_EVEN);
 		assertEquals(new BigDecimal("2737"), result);
-		
+
 		result = new BigDecimal("52").divide(
 				new BigDecimal("0.019"), 8, RoundingMode.HALF_EVEN);
 		assertEquals(new BigDecimal("2736.84210526"), result);
