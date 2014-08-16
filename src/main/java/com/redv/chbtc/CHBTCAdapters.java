@@ -3,6 +3,7 @@ package com.redv.chbtc;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -75,10 +76,12 @@ public class CHBTCAdapters {
 	}
 
 	public static OrderBook adaptOrderBook(Depth depth, CurrencyPair currencyPair) {
-		return new OrderBook(
-				null,
-				adaptLimitOrders(OrderType.ASK, depth.getAsks(), currencyPair),
-				adaptLimitOrders(OrderType.BID, depth.getBids(), currencyPair));
+		List<LimitOrder> asks = adaptLimitOrders(OrderType.ASK, depth.getAsks(), currencyPair);
+		Collections.reverse(asks);
+
+		List<LimitOrder> bids = adaptLimitOrders(OrderType.BID, depth.getBids(), currencyPair);
+
+		return new OrderBook(null, asks, bids);
 	}
 
 	public static Trades adaptTrades(com.redv.chbtc.domain.Trade[] trades,
