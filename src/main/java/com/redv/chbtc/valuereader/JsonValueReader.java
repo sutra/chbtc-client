@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 public class JsonValueReader<T> implements ValueReader<T> {
 
@@ -40,6 +41,11 @@ public class JsonValueReader<T> implements ValueReader<T> {
 		try (InputStream in = IOUtils.toInputStream(content, ENCODING)) {
 			return objectMapper.readValue(in, valueType);
 		} catch (JsonParseException e) {
+			String msg = String.format("Parse from \"%1$s\" failed: %2$s",
+					content,
+					e.getMessage());
+			throw new JsonParseException(msg, e.getLocation(), e);
+		} catch (UnrecognizedPropertyException e) {
 			String msg = String.format("Parse from \"%1$s\" failed: %2$s",
 					content,
 					e.getMessage());
