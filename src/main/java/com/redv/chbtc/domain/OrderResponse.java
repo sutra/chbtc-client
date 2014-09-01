@@ -10,7 +10,7 @@ public class OrderResponse extends CHBTCError {
 
 	public OrderResponse(
 			@JsonProperty("code") final int code,
-			@JsonProperty("message") final String message, 
+			@JsonProperty("message") final String message,
 			@JsonProperty("id") final long id) {
 		super(code, message);
 		this.id = id;

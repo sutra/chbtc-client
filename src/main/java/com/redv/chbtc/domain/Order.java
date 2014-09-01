@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * 订单。
  */
-public class Order extends AbstractObject {
+public class Order extends CHBTCError {
 
 	private static final long serialVersionUID = 2014063001L;
 
@@ -57,6 +57,8 @@ public class Order extends AbstractObject {
 	private final int status;
 
 	public Order(
+			@JsonProperty("code") final int code,
+			@JsonProperty("message") final String message,
 			@JsonProperty("id") final long id,
 			@JsonProperty("type") final int type,
 			@JsonProperty("price") final BigDecimal price,
@@ -67,6 +69,7 @@ public class Order extends AbstractObject {
 			@JsonProperty("trade_date") final long tradeDate,
 			@JsonProperty("status") final int status
 			) {
+		super(code, message);
 		this.id = id;
 		this.type = type;
 		this.price = price;
