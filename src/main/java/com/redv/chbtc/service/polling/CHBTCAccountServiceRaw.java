@@ -8,7 +8,7 @@ import com.xeiam.xchange.ExchangeSpecification;
 public class CHBTCAccountServiceRaw extends CHBTCBaseTradePollingService {
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	protected CHBTCAccountServiceRaw(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);

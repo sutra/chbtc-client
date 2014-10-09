@@ -9,7 +9,7 @@ public class CHBTCBaseTradePollingService extends CHBTCBasePollingService {
 	protected final CHBTCClient client;
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	protected CHBTCBaseTradePollingService(
 			ExchangeSpecification exchangeSpecification) {

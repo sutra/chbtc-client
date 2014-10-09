@@ -21,6 +21,8 @@ public class CHBTCExchange extends BaseExchange {
 	public static final String CONNECT_TIMEOUT_PARAMETER = "connectTimeout";
 	public static final String CONNECTION_REQUEST_TIMEOUT_PARAMETER = "connectionRequestTimeout";
 
+	public static final String PRICE_SCALE_PARAMETER = "priceScale";
+
 	private static final List<CurrencyPair> SYMBOLS = Arrays.asList(
 			CurrencyPair.BTC_CNY,
 			CurrencyPair.LTC_CNY);
@@ -46,6 +48,8 @@ public class CHBTCExchange extends BaseExchange {
 		exchangeSpecification.setExchangeName("CHBTC");
 		exchangeSpecification.setExchangeSpecificParametersItem(
 				SYMBOLS_PARAMETER, SYMBOLS);
+		exchangeSpecification.setExchangeSpecificParametersItem(
+				PRICE_SCALE_PARAMETER, 8);
 		return exchangeSpecification;
 	}
 

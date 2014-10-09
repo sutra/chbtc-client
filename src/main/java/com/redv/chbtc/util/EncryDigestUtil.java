@@ -13,7 +13,7 @@ public class EncryDigestUtil {
 	 * 生成签名消息
 	 * @param aValue  要签名的字符串
 	 * @param aKey  签名密钥
-	 * @return
+	 * @return the signature.
 	 */
 	public static String hmacSign(String aValue, String aKey) {
 		byte k_ipad[] = new byte[64];
@@ -66,12 +66,6 @@ public class EncryDigestUtil {
 		return output.toString();
 	}
 
-	/**
-	 * 
-	 * @param args
-	 * @param key
-	 * @return
-	 */
 	public static String getHmac(String[] args, String key) {
 		if (args == null || args.length == 0) {
 			return (null);
@@ -85,8 +79,8 @@ public class EncryDigestUtil {
 
 	/**
 	 * SHA加密
-	 * @param aValue
-	 * @return
+	 * @param aValue string to digest.
+	 * @return the digested string.
 	 */
 	public static String digest(String aValue) {
 		aValue = aValue.trim();

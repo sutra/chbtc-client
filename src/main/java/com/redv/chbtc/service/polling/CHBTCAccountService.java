@@ -15,7 +15,7 @@ public class CHBTCAccountService extends CHBTCAccountServiceRaw implements
 		PollingAccountService {
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	public CHBTCAccountService(ExchangeSpecification exchangeSpecification) {
 		super(exchangeSpecification);

@@ -22,7 +22,7 @@ public class CHBTCMarketDataServiceRaw extends CHBTCBasePollingService {
 	private final Map<String, CHBTCMarketData> chbtcMarketDatas = new HashMap<>(2);
 
 	/**
-	 * @param exchangeSpecification
+	 * @param exchangeSpecification the exchange specification.
 	 */
 	protected CHBTCMarketDataServiceRaw(
 			ExchangeSpecification exchangeSpecification) {
@@ -46,19 +46,21 @@ public class CHBTCMarketDataServiceRaw extends CHBTCBasePollingService {
 		}
 	}
 
-	public TickerResponse getTicker(CurrencyPair currencyPair) {
+	public TickerResponse getTicker(CurrencyPair currencyPair)
+			throws IOException {
 		return getData(currencyPair).getTicker();
 	}
 
-	public Depth getDepth(CurrencyPair currencyPair) {
+	public Depth getDepth(CurrencyPair currencyPair) throws IOException {
 		return getData(currencyPair).getDepth();
 	}
 
-	public Trade[] getTrades(CurrencyPair currencyPair) {
+	public Trade[] getTrades(CurrencyPair currencyPair) throws IOException {
 		return getData(currencyPair).getTrades();
 	}
 
-	public Trade[] getTrades(CurrencyPair currencyPair, long since) {
+	public Trade[] getTrades(CurrencyPair currencyPair, long since)
+			throws IOException {
 		return getData(currencyPair).getTrades(since);
 	}
 

@@ -7,8 +7,10 @@ import com.redv.chbtc.CHBTCExchange;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.service.polling.BasePollingExchangeService;
+import com.xeiam.xchange.service.polling.BasePollingService;
 
-public class CHBTCBasePollingService extends BasePollingExchangeService {
+public class CHBTCBasePollingService extends BasePollingExchangeService
+		implements BasePollingService {
 
 	private final Collection<CurrencyPair> symbols;
 

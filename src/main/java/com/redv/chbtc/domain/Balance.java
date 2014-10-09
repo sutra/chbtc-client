@@ -4,26 +4,45 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Balance extends AbstractObject {
 
-	private static final long serialVersionUID = 2014062201L;
+	private static final long serialVersionUID = 2014063001L;
 
 	/**
 	 * 货币标识。
 	 */
-	private String currency;
+	private final String currency;
 
 	/**
 	 * 货币符号。
 	 */
-	private String symbol;
+	private final String symbol;
 
 	/**
 	 * 货币总量。
 	 */
-	private BigDecimal amount;
+	private final BigDecimal amount;
 
-	public Balance() {
+	/**
+	 * Constructor.
+	 *
+	 * @param currency the currency symbol.
+	 * @param symbol the URL encoded currency symbol.
+	 * @param amount the amount of the currency.
+	 */
+	public Balance(
+			@JsonProperty("currency") final String currency,
+			@JsonProperty("symbol") final String symbol,
+			@JsonProperty("amount") final BigDecimal amount) {
+		this.currency = currency;
+		try {
+			this.symbol = URLDecoder.decode(symbol, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		this.amount = amount;
 	}
 
 	/**
@@ -42,19 +61,6 @@ public class Balance extends AbstractObject {
 	 */
 	public String getSymbol() {
 		return symbol;
-	}
-
-	/**
-	 * Sets the currency symbol.
-	 * 
-	 * @param symbol the URL encoded symbol.
-	 */
-	public void setSymbol(String symbol) {
-		try {
-			this.symbol = URLDecoder.decode(symbol, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
