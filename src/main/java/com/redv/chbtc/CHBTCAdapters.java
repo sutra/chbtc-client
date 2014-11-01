@@ -23,7 +23,6 @@ import com.xeiam.xchange.dto.Order.OrderType;
 import com.xeiam.xchange.dto.account.AccountInfo;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.marketdata.Ticker.TickerBuilder;
 import com.xeiam.xchange.dto.marketdata.Trade;
 import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
@@ -63,15 +62,14 @@ public class CHBTCAdapters {
 
 	public static Ticker adaptTicker(TickerResponse tickerResponse,
 			CurrencyPair currencyPair) {
-		return TickerBuilder
-				.newInstance()
-				.withCurrencyPair(currencyPair)
-				.withHigh(tickerResponse.getTicker().getHigh())
-				.withLow(tickerResponse.getTicker().getLow())
-				.withBid(tickerResponse.getTicker().getBuy())
-				.withAsk(tickerResponse.getTicker().getSell())
-				.withLast(tickerResponse.getTicker().getLast())
-				.withVolume(tickerResponse.getTicker().getVol())
+		return new Ticker.Builder()
+				.currencyPair(currencyPair)
+				.high(tickerResponse.getTicker().getHigh())
+				.low(tickerResponse.getTicker().getLow())
+				.bid(tickerResponse.getTicker().getBuy())
+				.ask(tickerResponse.getTicker().getSell())
+				.last(tickerResponse.getTicker().getLast())
+				.volume(tickerResponse.getTicker().getVol())
 				.build();
 	}
 
@@ -202,7 +200,9 @@ public class CHBTCAdapters {
 				price,
 				new Date(order.getTradeDate()),
 				null,
-				String.valueOf(order.getId())
+				String.valueOf(order.getId()),
+				null,
+				null
 				);
 	}
 
