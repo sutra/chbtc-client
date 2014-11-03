@@ -125,16 +125,16 @@ public class CHBTCAdapters {
 		return limitOrders;
 	}
 
-	public static UserTrades adaptTrades(Order order, int priceScale) {
-		return adaptTrades(new Order[] { order }, priceScale);
+	public static UserTrades adaptUserTrades(Order order, int priceScale) {
+		return adaptUserTrades(new Order[] { order }, priceScale);
 	}
 
-	public static UserTrades adaptTrades(Order[] orders, int priceScale) {
-		List<UserTrade> trades = new ArrayList<>(orders.length);
+	public static UserTrades adaptUserTrades(Order[] orders, int priceScale) {
+		List<UserTrade> userTrades = new ArrayList<>(orders.length);
 		for (Order order : orders) {
-			trades.add(adaptTrade(order, priceScale));
+			userTrades.add(adaptUserTrade(order, priceScale));
 		}
-		return new UserTrades(trades, TradeSortType.SortByTimestamp);
+		return new UserTrades(userTrades, TradeSortType.SortByTimestamp);
 	}
 
 	private static List<LimitOrder> adaptLimitOrders(
@@ -186,7 +186,7 @@ public class CHBTCAdapters {
 				trade.getTid());
 	}
 
-	private static UserTrade adaptTrade(Order order, int priceScale) {
+	private static UserTrade adaptUserTrade(Order order, int priceScale) {
 		String currency = order.getCurrency();
 		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
 		BigDecimal price = order.getTradeAmount().compareTo(BigDecimal.ZERO) > 0

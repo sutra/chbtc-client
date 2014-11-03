@@ -150,12 +150,12 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 
 		if (orderId != null) {
 			Order order = getOrder(orderId.longValue(), currency);
-			trades = CHBTCAdapters.adaptTrades(order, priceScale);
+			trades = CHBTCAdapters.adaptUserTrades(order, priceScale);
 		} else if (pageIndex != null && pageSize != null && type != null) {
 			checkPageSize(pageSize);
 
 			Order[] orders = getOrdersNew(type, currency, pageIndex, pageSize);
-			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
+			trades = CHBTCAdapters.adaptUserTrades(orders, priceScale);
 		} else if (pageIndex != null && pageSize != null){
 			checkPageSize(pageSize);
 
@@ -164,10 +164,10 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 					pageIndex,
 					pageSize);
 
-			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
+			trades = CHBTCAdapters.adaptUserTrades(orders, priceScale);
 		} else if (pageIndex != null && type != null) {
 			Order[] orders = getOrders(type, currency, pageIndex);
-			trades = CHBTCAdapters.adaptTrades(orders, priceScale);
+			trades = CHBTCAdapters.adaptUserTrades(orders, priceScale);
 		} else {
 			throw new IllegalArgumentException();
 		}

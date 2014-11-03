@@ -53,7 +53,7 @@ public class CHBTCAdaptersTest {
 	@Test
 	public void testAdaptTradesOrder() throws IOException {
 		Order order = mapper.readValue(getClass().getResource("domain/order.json"), Order.class);
-		UserTrades trades = CHBTCAdapters.adaptTrades(order, 8);
+		UserTrades trades = CHBTCAdapters.adaptUserTrades(order, 8);
 		assertEquals(1, trades.getTrades().size());
 		UserTrade trade = trades.getUserTrades().get(0);
 		assertEquals(CurrencyPair.BTC_CNY, trade.getCurrencyPair());
