@@ -27,6 +27,8 @@ import com.xeiam.xchange.dto.marketdata.Trade;
 import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.dto.marketdata.Trades.TradeSortType;
 import com.xeiam.xchange.dto.trade.LimitOrder;
+import com.xeiam.xchange.dto.trade.UserTrade;
+import com.xeiam.xchange.dto.trade.UserTrades;
 import com.xeiam.xchange.dto.trade.Wallet;
 
 /**
@@ -123,16 +125,16 @@ public class CHBTCAdapters {
 		return limitOrders;
 	}
 
-	public static Trades adaptTrades(Order order, int priceScale) {
+	public static UserTrades adaptTrades(Order order, int priceScale) {
 		return adaptTrades(new Order[] { order }, priceScale);
 	}
 
-	public static Trades adaptTrades(Order[] orders, int priceScale) {
-		List<Trade> trades = new ArrayList<>(orders.length);
+	public static UserTrades adaptTrades(Order[] orders, int priceScale) {
+		List<UserTrade> trades = new ArrayList<>(orders.length);
 		for (Order order : orders) {
 			trades.add(adaptTrade(order, priceScale));
 		}
-		return new Trades(trades, TradeSortType.SortByTimestamp);
+		return new UserTrades(trades, TradeSortType.SortByTimestamp);
 	}
 
 	private static List<LimitOrder> adaptLimitOrders(
@@ -184,7 +186,7 @@ public class CHBTCAdapters {
 				trade.getTid());
 	}
 
-	private static Trade adaptTrade(Order order, int priceScale) {
+	private static UserTrade adaptTrade(Order order, int priceScale) {
 		String currency = order.getCurrency();
 		CurrencyPair currencyPair = new CurrencyPair(currency.toUpperCase(), Currencies.CNY);
 		BigDecimal price = order.getTradeAmount().compareTo(BigDecimal.ZERO) > 0
@@ -193,7 +195,7 @@ public class CHBTCAdapters {
 						priceScale,
 						RoundingMode.HALF_EVEN)
 				: BigDecimal.ZERO;
-		return new Trade(
+		return new UserTrade(
 				adaptOrderType(order.getType()),
 				order.getTradeAmount(),
 				currencyPair,

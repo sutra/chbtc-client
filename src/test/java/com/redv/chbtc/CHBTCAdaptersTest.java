@@ -15,9 +15,9 @@ import com.redv.chbtc.domain.Order;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
 import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.marketdata.Trade;
-import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.dto.trade.LimitOrder;
+import com.xeiam.xchange.dto.trade.UserTrade;
+import com.xeiam.xchange.dto.trade.UserTrades;
 
 public class CHBTCAdaptersTest {
 
@@ -53,9 +53,9 @@ public class CHBTCAdaptersTest {
 	@Test
 	public void testAdaptTradesOrder() throws IOException {
 		Order order = mapper.readValue(getClass().getResource("domain/order.json"), Order.class);
-		Trades trades = CHBTCAdapters.adaptTrades(order, 8);
+		UserTrades trades = CHBTCAdapters.adaptTrades(order, 8);
 		assertEquals(1, trades.getTrades().size());
-		Trade trade = trades.getTrades().get(0);
+		UserTrade trade = trades.getUserTrades().get(0);
 		assertEquals(CurrencyPair.BTC_CNY, trade.getCurrencyPair());
 		assertEquals("2014050277474869", trade.getOrderId());
 		assertEquals(new BigDecimal("2760.53105263"), trade.getPrice());
