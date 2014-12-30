@@ -14,18 +14,18 @@ public class DepthTest extends UnmarshalTest {
 		Depth depth = readValue("depth.json", Depth.class);
 
 		// asks
-		assertEquals(new BigDecimal("5356.00"), depth.getAsks()[0][0]);
-		assertEquals(new BigDecimal("0.1000"), depth.getAsks()[0][1]);
+		assertEquals(new BigDecimal("1918.78"), depth.getAsks()[0][0]);
+		assertEquals(new BigDecimal("0.041"), depth.getAsks()[0][1]);
 
-		assertEquals(new BigDecimal("5355.00"), depth.getAsks()[1][0]);
-		assertEquals(new BigDecimal("0.5290"), depth.getAsks()[1][1]);
+		assertEquals(new BigDecimal("1919.0"), depth.getAsks()[1][0]);
+		assertEquals(new BigDecimal("0.01"), depth.getAsks()[1][1]);
 
 		// bids
-		assertEquals(new BigDecimal("5248.00"), depth.getBids()[0][0]);
-		assertEquals(new BigDecimal("0.0010"), depth.getBids()[0][1]);
+		assertEquals(new BigDecimal("1915.0"), depth.getBids()[0][0]);
+		assertEquals(new BigDecimal("0.009"), depth.getBids()[0][1]);
 
-		assertEquals(new BigDecimal("5240.00"), depth.getBids()[1][0]);
-		assertEquals(new BigDecimal("0.0100"), depth.getBids()[1][1]);
+		assertEquals(new BigDecimal("1913.0"), depth.getBids()[1][0]);
+		assertEquals(new BigDecimal("0.07"), depth.getBids()[1][1]);
 	}
 
 }

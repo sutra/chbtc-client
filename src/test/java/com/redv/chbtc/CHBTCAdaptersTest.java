@@ -32,22 +32,22 @@ public class CHBTCAdaptersTest {
 		List<LimitOrder> bids = orderBook.getBids();
 
 		// asks should be sorted ascending
-		// ask 0.1130@5250.00
-		assertEquals(new BigDecimal("5250.00"), asks.get(0).getLimitPrice());
-		assertEquals(new BigDecimal("0.1130"), asks.get(0).getTradableAmount());
+		// ask 0.041@1918.78
+		assertEquals(new BigDecimal("1918.78"), asks.get(0).getLimitPrice());
+		assertEquals(new BigDecimal("0.041"), asks.get(0).getTradableAmount());
 
-		// ask 2.1990@5255.00
-		assertEquals(new BigDecimal("5255.00"), asks.get(1).getLimitPrice());
-		assertEquals(new BigDecimal("2.1990"), asks.get(1).getTradableAmount());
+		// ask 0.01@1919.0
+		assertEquals(new BigDecimal("1919.0"), asks.get(1).getLimitPrice());
+		assertEquals(new BigDecimal("0.01"), asks.get(1).getTradableAmount());
 
-		// bids should be sorted deascending
-		// bid 0.0010@5248.00
-		assertEquals(new BigDecimal("5248.00"), bids.get(0).getLimitPrice());
-		assertEquals(new BigDecimal("0.0010"), bids.get(0).getTradableAmount());
+		// bids should be sorted descending
+		// bid 0.009@1915.0
+		assertEquals(new BigDecimal("1915.0"), bids.get(0).getLimitPrice());
+		assertEquals(new BigDecimal("0.009"), bids.get(0).getTradableAmount());
 
-		// bid 0.0100@5240.00
-		assertEquals(new BigDecimal("5240.00"), bids.get(1).getLimitPrice());
-		assertEquals(new BigDecimal("0.0100"), bids.get(1).getTradableAmount());
+		// bid 0.07@1913.0
+		assertEquals(new BigDecimal("1913.0"), bids.get(1).getLimitPrice());
+		assertEquals(new BigDecimal("0.07"), bids.get(1).getTradableAmount());
 	}
 
 	@Test
