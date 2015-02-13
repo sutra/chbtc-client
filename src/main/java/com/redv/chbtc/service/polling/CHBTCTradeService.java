@@ -10,6 +10,7 @@ import com.redv.chbtc.CHBTCExchange;
 import com.redv.chbtc.domain.CHBTCError;
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Type;
+import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.trade.LimitOrder;
@@ -29,12 +30,10 @@ public class CHBTCTradeService extends CHBTCTradeServiceRaw implements
 
 	private final int priceScale;
 
-	/**
-	 * @param exchangeSpecification the exchange specification.
-	 */
-	public CHBTCTradeService(ExchangeSpecification exchangeSpecification) {
-		super(exchangeSpecification);
-		Integer priceScale = (Integer) exchangeSpecification.getParameter(
+	public CHBTCTradeService(Exchange exchange) {
+		super(exchange);
+		ExchangeSpecification spec = exchange.getExchangeSpecification();
+		Integer priceScale = (Integer) spec.getParameter(
 				CHBTCExchange.PRICE_SCALE_PARAMETER);
 		this.priceScale = priceScale != null ? priceScale.intValue() : 8;
 	}

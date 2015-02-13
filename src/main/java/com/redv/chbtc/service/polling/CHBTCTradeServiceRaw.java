@@ -6,17 +6,14 @@ import java.util.List;
 
 import com.redv.chbtc.domain.Order;
 import com.redv.chbtc.domain.Type;
-import com.xeiam.xchange.ExchangeSpecification;
+import com.xeiam.xchange.Exchange;
 
 public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 
 	private static final Order[] ORDER_ARRAY = new Order[] {};
 
-	/**
-	 * @param exchangeSpecification the exchange specification.
-	 */
-	protected CHBTCTradeServiceRaw(ExchangeSpecification exchangeSpecification) {
-		super(exchangeSpecification);
+	protected CHBTCTradeServiceRaw(Exchange exchange) {
+		super(exchange);
 	}
 
 	/**
@@ -77,7 +74,7 @@ public class CHBTCTradeServiceRaw extends CHBTCBaseTradePollingService {
 
 	/**
 	 * Returns bid or ask orders.
-	 * 
+	 *
 	 * @param tradeType the trade type, buy or sell.
 	 * @param currency the base symbol in lower case to specify market.
 	 * e.g. btc, ltc.

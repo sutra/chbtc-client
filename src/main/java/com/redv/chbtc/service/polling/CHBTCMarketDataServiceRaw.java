@@ -13,6 +13,7 @@ import com.redv.chbtc.CHBTCMarketDataLTC;
 import com.redv.chbtc.domain.Depth;
 import com.redv.chbtc.domain.TickerResponse;
 import com.redv.chbtc.domain.Trade;
+import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.Currencies;
 import com.xeiam.xchange.currency.CurrencyPair;
@@ -21,13 +22,10 @@ public class CHBTCMarketDataServiceRaw extends CHBTCBasePollingService {
 
 	private final Map<String, CHBTCMarketData> chbtcMarketDatas = new HashMap<>(2);
 
-	/**
-	 * @param exchangeSpecification the exchange specification.
-	 */
-	protected CHBTCMarketDataServiceRaw(
-			ExchangeSpecification exchangeSpecification) {
-		super(exchangeSpecification);
-		final String baseUrl = exchangeSpecification.getPlainTextUri();
+	protected CHBTCMarketDataServiceRaw(Exchange exchange) {
+		super(exchange);
+		ExchangeSpecification spec = exchange.getExchangeSpecification();
+		final String baseUrl = spec.getPlainTextUri();
 		final Collection<CurrencyPair> exchangeSymbols;
 		try {
 			exchangeSymbols = getExchangeSymbols();

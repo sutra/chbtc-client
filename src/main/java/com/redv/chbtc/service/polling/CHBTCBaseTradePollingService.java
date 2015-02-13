@@ -2,28 +2,26 @@ package com.redv.chbtc.service.polling;
 
 import com.redv.chbtc.CHBTCClient;
 import com.redv.chbtc.CHBTCExchange;
+import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeSpecification;
 
 public class CHBTCBaseTradePollingService extends CHBTCBasePollingService {
 
 	protected final CHBTCClient client;
 
-	/**
-	 * @param exchangeSpecification the exchange specification.
-	 */
-	protected CHBTCBaseTradePollingService(
-			ExchangeSpecification exchangeSpecification) {
-		super(exchangeSpecification);
+	protected CHBTCBaseTradePollingService(Exchange exchange) {
+		super(exchange);
+		ExchangeSpecification spec = exchange.getExchangeSpecification();
 
-		final String tradeApiUrl = exchangeSpecification.getSslUri();
-		final String accessKey = exchangeSpecification.getApiKey();
-		final String secretKey = exchangeSpecification.getSecretKey();
+		final String tradeApiUrl = spec.getSslUri();
+		final String accessKey = spec.getApiKey();
+		final String secretKey = spec.getSecretKey();
 
-		final Integer socketTimeout = (Integer) exchangeSpecification
+		final Integer socketTimeout = (Integer) spec
 				.getParameter(CHBTCExchange.SOCKET_TIMEOUT_PARAMETER);
-		final Integer connectTimeout = (Integer) exchangeSpecification
+		final Integer connectTimeout = (Integer) spec
 				.getParameter(CHBTCExchange.CONNECT_TIMEOUT_PARAMETER);
-		final Integer connectionRequestTimeout = (Integer) exchangeSpecification
+		final Integer connectionRequestTimeout = (Integer) spec
 				.getParameter(CHBTCExchange.CONNECTION_REQUEST_TIMEOUT_PARAMETER);
 
 		client = new CHBTCClient(

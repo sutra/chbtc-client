@@ -3,6 +3,8 @@ package com.redv.chbtc;
 import java.util.Arrays;
 import java.util.List;
 
+import si.mazi.rescu.SynchronizedValueFactory;
+
 import com.redv.chbtc.service.polling.CHBTCAccountService;
 import com.redv.chbtc.service.polling.CHBTCMarketDataService;
 import com.redv.chbtc.service.polling.CHBTCTradeService;
@@ -30,10 +32,10 @@ public class CHBTCExchange extends BaseExchange {
 	@Override
 	public void applySpecification(ExchangeSpecification exchangeSpecification) {
 		super.applySpecification(exchangeSpecification);
-		this.pollingMarketDataService = new CHBTCMarketDataService(exchangeSpecification);
+		this.pollingMarketDataService = new CHBTCMarketDataService(this);
 		if (exchangeSpecification.getApiKey() != null) {
-			this.pollingAccountService = new CHBTCAccountService(exchangeSpecification);
-			this.pollingTradeService = new CHBTCTradeService(exchangeSpecification);
+			this.pollingAccountService = new CHBTCAccountService(this);
+			this.pollingTradeService = new CHBTCTradeService(this);
 		}
 	}
 
@@ -51,6 +53,14 @@ public class CHBTCExchange extends BaseExchange {
 		exchangeSpecification.setExchangeSpecificParametersItem(
 				PRICE_SCALE_PARAMETER, 8);
 		return exchangeSpecification;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SynchronizedValueFactory<Long> getNonceFactory() {
+		return null;
 	}
 
 }
