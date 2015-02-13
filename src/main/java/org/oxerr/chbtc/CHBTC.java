@@ -17,14 +17,14 @@ import org.oxerr.chbtc.dto.OrderResponse;
 @Produces(MediaType.APPLICATION_JSON)
 public interface CHBTC {
 
-	static final String METHOD_ORDER = "order";
-	static final String METHOD_CANCEL_ORDER = "cancelOrder";
-	static final String METHOD_GET_ORDER = "getOrder";
-	static final String METHOD_GET_ORDERS = "getOrders";
-	static final String METHOD_GET_ORDERS_NEW = "getOrdersNew";
-	static final String METHOD_GET_ORDERS_IGNORE_TRADE_TYPE = "getOrdersIgnoreTradeType";
-	static final String METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE = "getUnfinishedOrdersIgnoreTradeType";
-	static final String METHOD_GET_ACCOUNT_INFO = "getAccountInfo";
+	String METHOD_ORDER = "order";
+	String METHOD_CANCEL_ORDER = "cancelOrder";
+	String METHOD_GET_ORDER = "getOrder";
+	String METHOD_GET_ORDERS = "getOrders";
+	String METHOD_GET_ORDERS_NEW = "getOrdersNew";
+	String METHOD_GET_ORDERS_IGNORE_TRADE_TYPE = "getOrdersIgnoreTradeType";
+	String METHOD_GET_UNFINISHED_ORDERS_IGNORE_TRADE_TYPE = "getUnfinishedOrdersIgnoreTradeType";
+	String METHOD_GET_ACCOUNT_INFO = "getAccountInfo";
 
 	/**
 	 * Places a buy or sell order.
@@ -121,6 +121,7 @@ public interface CHBTC {
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
 	 */
+	@Deprecated
 	@GET
 	@Path("getOrders")
 	Order[] getOrders(
@@ -150,6 +151,7 @@ public interface CHBTC {
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
 	 */
+	@Deprecated
 	@GET
 	@Path("getOrdersNew")
 	Order[] getOrdersNew(
@@ -179,6 +181,7 @@ public interface CHBTC {
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
 	 */
+	@Deprecated
 	@GET
 	@Path("getOrdersIgnoreTradeType")
 	Order[] getOrdersIgnoreTradeType(
@@ -207,6 +210,7 @@ public interface CHBTC {
 	 * or object<code>{"code":3001,"message":"挂单没有找到"}</code>,
 	 * then it will be parsed failed.
 	 */
+	@Deprecated
 	@GET
 	@Path("getUnfinishedOrdersIgnoreTradeType")
 	Order[] getUnfinishedOrdersIgnoreTradeType(

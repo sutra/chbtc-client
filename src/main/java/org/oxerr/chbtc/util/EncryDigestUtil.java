@@ -1,13 +1,14 @@
 package org.oxerr.chbtc.util;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class EncryDigestUtil {
 
-	private static String encodingCharset = "UTF-8";
+	private static final Charset ENCODING_CHARSET = StandardCharsets.UTF_8;
 
 	/**
 	 * 生成签名消息
@@ -20,13 +21,8 @@ public class EncryDigestUtil {
 		byte k_opad[] = new byte[64];
 		byte keyb[];
 		byte value[];
-		try {
-			keyb = aKey.getBytes(encodingCharset);
-			value = aValue.getBytes(encodingCharset);
-		} catch (UnsupportedEncodingException e) {
-			keyb = aKey.getBytes();
-			value = aValue.getBytes();
-		}
+		keyb = aKey.getBytes(ENCODING_CHARSET);
+		value = aValue.getBytes(ENCODING_CHARSET);
 
 		Arrays.fill(k_ipad, keyb.length, 64, (byte) 54);
 		Arrays.fill(k_opad, keyb.length, 64, (byte) 92);
@@ -53,13 +49,15 @@ public class EncryDigestUtil {
 	}
 
 	public static String toHex(byte input[]) {
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 		StringBuffer output = new StringBuffer(input.length * 2);
-		for (int i = 0; i < input.length; i++) {
-			int current = input[i] & 0xff;
-			if (current < 16)
+		for (byte element : input) {
+			int current = element & 0xff;
+			if (current < 16) {
 				output.append("0");
+			}
 			output.append(Integer.toString(current, 16));
 		}
 
@@ -68,13 +66,13 @@ public class EncryDigestUtil {
 
 	public static String getHmac(String[] args, String key) {
 		if (args == null || args.length == 0) {
-			return (null);
+			return null;
 		}
 		StringBuffer str = new StringBuffer();
-		for (int i = 0; i < args.length; i++) {
-			str.append(args[i]);
+		for (String arg : args) {
+			str.append(arg);
 		}
-		return (hmacSign(str.toString(), key));
+		return hmacSign(str.toString(), key);
 	}
 
 	/**
@@ -85,11 +83,7 @@ public class EncryDigestUtil {
 	public static String digest(String aValue) {
 		aValue = aValue.trim();
 		byte value[];
-		try {
-			value = aValue.getBytes(encodingCharset);
-		} catch (UnsupportedEncodingException e) {
-			value = aValue.getBytes();
-		}
+		value = aValue.getBytes(ENCODING_CHARSET);
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA");
