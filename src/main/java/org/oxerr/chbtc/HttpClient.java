@@ -62,7 +62,6 @@ public class HttpClient implements AutoCloseable {
 				.setSocketTimeout(socketTimeout)
 				.setConnectTimeout(connectTimeout)
 				.setConnectionRequestTimeout(connectionRequestTimeout)
-				.setStaleConnectionCheckEnabled(true)
 				.build();
 		httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
 
