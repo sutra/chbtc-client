@@ -24,6 +24,10 @@ public class CHBTCExchange extends BaseExchange {
 	public static final String CONNECT_TIMEOUT_PARAMETER = "connectTimeout";
 	public static final String CONNECTION_REQUEST_TIMEOUT_PARAMETER = "connectionRequestTimeout";
 
+	public static final String ALTERNATIVE_DATA_URI_PARAMETER = "alternativeDataUri";
+	public static final String CHECKER_LIFECYCLE_MILLIS_PARAMETER = "checkerLifecycleMillis";
+	public static final String CHECK_INTERVAL_MILLIS_PARAMETER = "checkIntervalMillis";
+
 	public static final String PRICE_SCALE_PARAMETER = "priceScale";
 
 	private static final List<CurrencyPair> SYMBOLS = Arrays.asList(
@@ -48,11 +52,17 @@ public class CHBTCExchange extends BaseExchange {
 		ExchangeSpecification exchangeSpecification = new ExchangeSpecification(this.getClass());
 		exchangeSpecification.setSslUri("https://trade.chbtc.com/api");
 		exchangeSpecification.setPlainTextUri("http://api.chbtc.com/data");
+		exchangeSpecification.setExchangeSpecificParametersItem(
+			ALTERNATIVE_DATA_URI_PARAMETER, "https://trans.chbtc.com/data");
+		exchangeSpecification.setExchangeSpecificParametersItem(
+			CHECKER_LIFECYCLE_MILLIS_PARAMETER, 300_000);
+		exchangeSpecification.setExchangeSpecificParametersItem(
+			CHECK_INTERVAL_MILLIS_PARAMETER, 60_000);
 		exchangeSpecification.setExchangeName("CHBTC");
 		exchangeSpecification.setExchangeSpecificParametersItem(
-				SYMBOLS_PARAMETER, SYMBOLS);
+			SYMBOLS_PARAMETER, SYMBOLS);
 		exchangeSpecification.setExchangeSpecificParametersItem(
-				PRICE_SCALE_PARAMETER, 8);
+			PRICE_SCALE_PARAMETER, 8);
 		return exchangeSpecification;
 	}
 
