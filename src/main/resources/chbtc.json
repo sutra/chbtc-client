@@ -2,5 +2,7 @@
 	"currency_pairs":[
 		"BTC/CNY",
 		"LTC/CNY"
-	]
+	],
+	"fiat_amount_multiplier":2,
+	"crypto_amount_multiplier":3
 }
